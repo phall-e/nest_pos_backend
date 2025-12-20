@@ -81,4 +81,21 @@ export const permissions = [
         name: 'delete-uom',
         description: 'Delete uom',
     },
+    // Product
+    {
+        name: 'read-product',
+        description: 'Read product',
+    },
+    {
+        name: 'create-product',
+        description: 'Create product',
+    },
+    {
+        name: 'update-product',
+        description: 'Update product',
+    },
+    {
+        name: 'delete-product',
+        description: 'Delete product',
+    },
 ]

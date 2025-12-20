@@ -1,4 +1,3 @@
-import * as bcrypt from 'bcrypt';
 import { DataSource } from 'typeorm';
 import { Seeder } from 'typeorm-extension';
 import { users } from './user.seed';
@@ -10,6 +9,8 @@ import { roles } from './role.seed';
 import { PasswordHash } from '@/utils/password-hash.util';
 import { CategoryEntity } from '@/modules/admin/master-data/category/entities/category.entity';
 import { categories } from './category.seed';
+import { UomEntity } from '@/modules/admin/master-data/uom/entities/uom.entity';
+import { uoms } from './uom.seed';
 
 export default class MainSeeder implements Seeder {
     public async run(database: DataSource): Promise<void> {
@@ -44,5 +45,6 @@ export default class MainSeeder implements Seeder {
             .execute();
 
         await database.manager.save(CategoryEntity, categories);
+        await database.manager.save(UomEntity, uoms);
     }
 }

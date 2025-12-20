@@ -64,4 +64,21 @@ export const permissions = [
         name: 'delete-category',
         description: 'Delete category',
     },
+    // Uom
+    {
+        name: 'read-uom',
+        description: 'Read uom',
+    },
+    {
+        name: 'create-uom',
+        description: 'Create uom',
+    },
+    {
+        name: 'update-uom',
+        description: 'Update uom',
+    },
+    {
+        name: 'delete-uom',
+        description: 'Delete uom',
+    },
 ]

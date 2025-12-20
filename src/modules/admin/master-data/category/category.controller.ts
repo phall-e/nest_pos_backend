@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, Put } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryRequestDto } from './dto/create-category-request.dto';
 import { UpdateCategoryRequestDto } from './dto/update-category-request.dto';
-import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SWAGGER_TOKEN_NAME } from '@/swagger/config';
 import { CurrentUser } from '@/modules/auth/decorators/current-user.decorator';
 import { UserEntity } from '../../system/user/entities/user.entity';
@@ -11,7 +11,7 @@ import { Permissions } from '@/modules/auth/decorators/permissions.decorator';
 import { Paginate, type PaginateQuery } from 'nestjs-paginate';
 import { CategoryEntity } from './entities/category.entity';
 import { PaginatedResponse } from '@/common/paginations/paginated-response.type';
-import { PaginationResponseDto } from '@/common/paginations/pagination-response.dto';
+import { ApiPaginatedResponse } from '@/common/paginations/api-paginated-response.decorator';
 
 @ApiTags('Categories')
 @ApiBearerAuth(SWAGGER_TOKEN_NAME)
@@ -35,15 +35,13 @@ export class CategoryController {
 
   @Get()
   @Permissions('read-category')
-  @ApiResponse({ status: 200, type: PaginationResponseDto<CategoryResponseDto>, description: 'List of all categories' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiQuery({ name: 'search', required: false, type: String, description: 'Search users' })
+  @ApiPaginatedResponse(CategoryResponseDto)
   public findAll(@Paginate() query: PaginateQuery): Promise<PaginatedResponse<CategoryEntity, CategoryResponseDto>> {
     return this.categoryService.list(query);
   }
 
   @Get('select-options')
-  @ApiResponse({ status: 200, type: [Object], description: 'List of roles for selection' })
+  @ApiResponse({ status: 200, type: [Object], description: 'List of categories for selection' })
   public findAllForSelection(): Promise<{ id: number; nameEn: string; nameKh: string }[]> {
     return this.categoryService.findAllForSelection();
   }

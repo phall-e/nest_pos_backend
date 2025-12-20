@@ -6,10 +6,7 @@ import { UserResponseDto } from './dto/user-response.dto';
 import { Permissions } from '@/modules/auth/decorators/permissions.decorator';
 import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SWAGGER_TOKEN_NAME } from '@/swagger/config';
-import {type PaginationRequest } from '@/common/paginations/interfaces/pagination-request.interface';
-import { PaginationParams } from '@/common/paginations/decorators/pagination-params.decorator';
 import { PaginationResponseDto } from '@/common/paginations/pagination-response.dto';
-import { UserEntity } from './entities/user.entity';
 
 @ApiTags('Users')
 @ApiBearerAuth(SWAGGER_TOKEN_NAME)
@@ -30,11 +27,11 @@ export class UserController {
 
   @Get()
   @Permissions('read-user')
-  @ApiResponse({ status: 200, type: [UserResponseDto], description: 'List of all users' })
+  @ApiResponse({ status: 200, type: PaginationResponseDto<UserResponseDto>, description: 'List of all users' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiQuery({ name: 'search', required: false, type: String, description: 'Search users' })
-  findAll(@PaginationParams() pagination: PaginationRequest): Promise<PaginationResponseDto<UserResponseDto>> {
-    return this.userService.list<UserEntity, UserResponseDto>(pagination);
+  findAll() {
+    // return this.userService.list<UserEntity, UserResponseDto>(pagination);
   }
 
   @Get('select-options')

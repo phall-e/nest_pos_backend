@@ -6,8 +6,8 @@ import { RoleResponseDto } from './dto/role-response.dto';
 import { ApiBasicAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SWAGGER_TOKEN_NAME } from '@/swagger/config';
 import { Permissions } from '@/modules/auth/decorators/permissions.decorator';
-import { PaginationParams } from '@/common/paginations/decorators/pagination-params.decorator';
-import { type PaginationRequest } from '@/common/paginations/interfaces';
+// import { PaginationParams } from '@/common/paginations/decorators/pagination-params.decorator';
+// import { type PaginationRequest } from '@/common/paginations/interfaces';
 import { PaginationResponseDto } from '@/common/paginations/pagination-response.dto';
 import { RoleEntity } from './entities/role.entity';
 
@@ -30,10 +30,10 @@ export class RoleController {
 
   @Get()
   @Permissions('read-role')
-  @ApiResponse({ status: 200, type: [RoleResponseDto], description: 'List of all roles' })
+  @ApiResponse({ status: 200, type: PaginationResponseDto<RoleResponseDto>, description: 'List of all roles' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  findAll(@PaginationParams() pagination: PaginationRequest): Promise<PaginationResponseDto<RoleResponseDto>> {
-    return this.roleService.list<RoleEntity, RoleResponseDto>(pagination);
+  findAll() {
+    // return this.roleService.list<RoleEntity, RoleResponseDto>(pagination);
   }
 
   @Get('select-options')

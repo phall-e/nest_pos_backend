@@ -1,24 +1,26 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class PaginationResponseDto<T> {
-    @ApiProperty({ example: 1 })
-    currentPage: number;
-
-    @ApiProperty({ example: 0 })
-    skippedRecords: number;
-
-    @ApiProperty({ example: 1 })
-    totalPages: number;
-
-    @ApiProperty({ example: false })
-    hasNext: boolean;
+export class PaginationMetaDto {
+    @ApiProperty()
+    itemsPerPage: number;
 
     @ApiProperty()
-    content: T[];
+    totalItems?: number;
 
-    @ApiProperty({ example: 1 })
-    payloadSize: number;
+    @ApiProperty()
+    currentPage?: number;
 
-    @ApiProperty({ example: 1 })
-    totalRecords: number;
+    @ApiProperty()
+    totalPages?: number; 
+}
+
+export class PaginationResponseDto<T> {
+    @ApiProperty()
+    data: T[];
+    
+    @ApiProperty()
+    meta: PaginationMetaDto;
+
+    @ApiProperty()
+    links?: Record<string, string>;
 }

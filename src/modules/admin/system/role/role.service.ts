@@ -6,7 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { RoleEntity } from './entities/role.entity';
 import { Filter, Repository } from 'typeorm';
 import { RoleResponseDto } from './dto/role-response.dto';
-import { BaseCrudService } from '@/common/services/base-crud.service';
+// import { BaseCrudService } from '@/common/services/base-crud.service';
 
 export const ROLE_FILTER_FIELDS = [
   'name',
@@ -14,7 +14,7 @@ export const ROLE_FILTER_FIELDS = [
 ]
 
 @Injectable()
-export class RoleService extends BaseCrudService{
+export class RoleService{
 
   protected queryName: string = 'role';
   protected SEARCH_FIELDS = ['name', 'description'];
@@ -24,24 +24,24 @@ export class RoleService extends BaseCrudService{
     @InjectRepository(RoleEntity)
     private roleRepository: Repository<RoleEntity>,
   ){
-    super();
+    // super();
   }
 
   protected getMapperResponseEntityField() {
-      return RoleMapper.toDto;
-    }
+    return RoleMapper.toDto;
+  }
   
-    protected getFilters() {
-      const filters: { [key: string]: Filter<RoleEntity> } = {
-        // isActive: (query, value) => {
-        //   return query.andWhere('role.isActive = :isActivev', {
-        //     isActive: value,
-        //   })
-        // }
-      }
-  
-      return filters;
+  protected getFilters() {
+    const filters: { [key: string]: Filter<RoleEntity> } = {
+      // isActive: (query, value) => {
+      //   return query.andWhere('role.isActive = :isActivev', {
+      //     isActive: value,
+      //   })
+      // }
     }
+
+    return filters;
+  }
   
   public async create(dto: CreateRoleRequestDto): Promise<RoleResponseDto> {
     try {
@@ -55,7 +55,6 @@ export class RoleService extends BaseCrudService{
 
   protected getListQuery() {
     return this.roleRepository.createQueryBuilder('role')
-      
   }
 
   public async findAllForSelection(): Promise<{ id: number; name: string }[]> {

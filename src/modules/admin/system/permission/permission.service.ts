@@ -5,14 +5,45 @@ import { PermissionResponseDto } from './dto/permission-response.dto';
 import { PermissionMapper } from './permission.mapper';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PermissionEntity } from './entities/permission.entity';
-import { Repository } from 'typeorm';
+import { Filter, Repository } from 'typeorm';
+// import { BaseCrudService } from '@/common/services/base-crud.service';
+
+export const PERMISSION_FILTER_FIELDS = [
+  'name',
+  'description'
+]
 
 @Injectable()
-export class PermissionService {
+export class PermissionService{
+
+  protected queryName: string = 'role';
+  protected SEARCH_FIELDS = ['name', 'description'];
+  protected FILTER_FIELDS = PERMISSION_FILTER_FIELDS;
+  
+
   constructor(
     @InjectRepository(PermissionEntity)
     private permissionRepository: Repository<PermissionEntity>,
-  ){}
+  ){
+    // super();
+  }
+
+  protected getMapperResponseEntityField() {
+    return PermissionMapper.toDto;
+  }
+  
+  protected getFilters() {
+    const filters: { [key: string]: Filter<PermissionEntity> } = {
+      // isActive: (query, value) => {
+      //   return query.andWhere('role.isActive = :isActivev', {
+      //     isActive: value,
+      //   })
+      // }
+    }
+
+    return filters;
+  }
+
   public async create(dto: CreatePermissionRequestDto): Promise<PermissionResponseDto> {
     try {
       let entity = PermissionMapper.toCreateEntity(dto);
@@ -23,14 +54,25 @@ export class PermissionService {
     }
   }
 
-  public async findAll(): Promise<PermissionResponseDto[]> {
+  protected getListQuery() {
+    return this.permissionRepository.createQueryBuilder('role')
+  }
+
+  public async findAllForSelection(): Promise<{ id: number; name: string, description: string }[]> {
     try {
-      const entities = await this.permissionRepository.find();
-      return PermissionMapper.toDtoList(entities);
-    } catch (error) {
+      const entities = await this.permissionRepository.find({
+        select: {
+          id: true,
+          name: true, 
+          description: true,
+        }
+      });
+      return entities;
+    } catch (error) { 
       throw new BadRequestException(error?.message);
     }
   }
+
 
   public async findOne(id: number): Promise<PermissionResponseDto> {
     try {

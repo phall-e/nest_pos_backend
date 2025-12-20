@@ -47,4 +47,21 @@ export const permissions = [
         name: 'delete-user',
         description: 'Delete User',
     },
+    // Category
+    {
+        name: 'read-category',
+        description: 'Read category',
+    },
+    {
+        name: 'create-category',
+        description: 'Create category',
+    },
+    {
+        name: 'update-category',
+        description: 'Update category',
+    },
+    {
+        name: 'delete-category',
+        description: 'Delete category',
+    },
 ]

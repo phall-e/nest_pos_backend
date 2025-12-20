@@ -8,6 +8,8 @@ import { permissions } from './permission.seed';
 import { RoleEntity } from '@/modules/admin/system/role/entities/role.entity';
 import { roles } from './role.seed';
 import { PasswordHash } from '@/utils/password-hash.util';
+import { CategoryEntity } from '@/modules/admin/master-data/category/entities/category.entity';
+import { categories } from './category.seed';
 
 export default class MainSeeder implements Seeder {
     public async run(database: DataSource): Promise<void> {
@@ -40,5 +42,7 @@ export default class MainSeeder implements Seeder {
                 role_id: 1,
             })))
             .execute();
+
+        await database.manager.save(CategoryEntity, categories);
     }
 }

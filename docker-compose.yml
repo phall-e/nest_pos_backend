@@ -1,0 +1,63 @@
+version: "3.9"
+
+services:
+  api:
+    container_name: nest_api_dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${API_PORT}:8000"
+    env_file:
+      - .env
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_INTERVAL=100
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - postgres
+    networks:
+      - backend_network
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres_dev
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${TYPEORM_USERNAME}
+      POSTGRES_PASSWORD: ${TYPEORM_PASSWORD}
+      POSTGRES_DB: ${TYPEORM_DATABASE}
+      PGDATA: /var/lib/postgresql/data
+    ports:
+      - "${TYPEORM_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend_network
+
+  minio:
+    image: minio/minio
+    container_name: minio_dev
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    env_file:
+      - .env
+    ports:
+      - "${MINIO_PORT}:9000"
+      - "${MINIO_CONSOLE_PORT}:9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - backend_network
+
+volumes:
+  postgres_data:
+  minio_data:
+
+networks:
+  backend_network:
+    driver: bridge

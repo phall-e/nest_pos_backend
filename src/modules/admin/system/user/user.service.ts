@@ -6,14 +6,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { Filter, Repository } from 'typeorm';
 import { UserMapper } from './user.mapper';
-import { BaseCrudService } from '@/common/services/base-crud.service';
+// import { BaseCrudService } from '@/common/services/base-crud.service';
 
 export const USER_FILTER_FIELDS = [
   'username',
 ]
 
 @Injectable()
-export class UserService extends BaseCrudService{
+export class UserService{
   
   protected queryName: string = 'user';
   protected SEARCH_FIELDS = ['username'];
@@ -24,7 +24,7 @@ export class UserService extends BaseCrudService{
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
   ){
-    super()
+    // super()
   }
 
   protected getMapperResponseEntityField() {

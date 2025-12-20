@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { UnprocessableEntityException, ValidationPipe } from '@nestjs/common';
 import { setupSwagger } from './swagger';
 import { HttpResponseInterceptor } from './common/http/response.interceptor';
 
@@ -12,6 +12,18 @@ async function bootstrap() {
       whitelist: true,
       transform: true,
       forbidNonWhitelisted: true,
+      exceptionFactory: (errors) => {
+        const formattedErrors = errors.map(err => ({
+          field: err.property,
+          errors: Object.values(err.constraints ?? {}),
+        }));
+
+        return new UnprocessableEntityException({
+          message: 'Unexceptable Entity',
+          statusCode: 422, 
+          errors: formattedErrors,
+        });
+      },
     }),
   );
   app.useGlobalInterceptors(new HttpResponseInterceptor());

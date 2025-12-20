@@ -5,6 +5,11 @@ import { UpdatePermissionRequestDto } from './dto/update-permission-request.dto'
 import { ApiBasicAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SWAGGER_TOKEN_NAME } from '@/swagger/config';
 import { Permissions } from '@/modules/auth/decorators/permissions.decorator';
+import { PermissionEntity } from './entities/permission.entity';
+import { PermissionResponseDto } from './dto/permission-response.dto';
+// import { PaginationParams } from '@/common/paginations/decorators/pagination-params.decorator';
+// import { type PaginationRequest } from '@/common/paginations/interfaces';
+import { PaginationResponseDto } from '@/common/paginations/pagination-response.dto';
 
 @ApiTags('Permissions')
 @ApiBasicAuth(SWAGGER_TOKEN_NAME)
@@ -25,11 +30,18 @@ export class PermissionController {
 
   @Get()
   @Permissions('read-permission')
-  @ApiResponse({ status: 200, description: 'List of all permissions' })
+  @ApiResponse({ status: 200, type: PaginationResponseDto<PermissionResponseDto>, description: 'List of all permissions' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   findAll() {
-    return this.permissionService.findAll();
+    // return this.permissionService.list<PermissionEntity, PermissionResponseDto>(pagination);
   }
+
+  @Get('select-options')
+  @ApiResponse({ status: 200, type: [Object], description: 'List of roles for selection' })
+  findAllForSelection(): Promise<{ id: number; name: string; description: string }[]> {
+    return this.permissionService.findAllForSelection();
+  }
+
 
   @Get(':id')
   @Permissions('read-permission')

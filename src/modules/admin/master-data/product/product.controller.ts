@@ -43,7 +43,7 @@ export class ProductController {
 
   @Get('select-options')
   @ApiResponse({ status: 200, type: [Object], description: 'List of products for selection' })
-  public findAllForSelectio(): Promise<{ id: number; nameEn: string; nameKh: string }[]> {
+  public findAllForSelection(): Promise<{ id: number; nameEn: string; nameKh: string }[]> {
     return this.productService.findAllForSelection();
   }
 
@@ -59,7 +59,7 @@ export class ProductController {
   @Permissions('update-product')
   @ApiResponse({ status: 200, type: ProductResponseDto, description: 'Update product successfully' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
-  public update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateProductRequestDto) {
+  public update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateProductRequestDto): Promise<ProductResponseDto> {
     return this.productService.update(id, dto);
   }
 
@@ -67,7 +67,7 @@ export class ProductController {
   @Permissions('delete-product')
   @ApiResponse({ status: 200, type: ProductResponseDto, description: 'Delete product successfully' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
-  public remove(@Param('id', ParseIntPipe) id: number) {
+  public remove(@Param('id', ParseIntPipe) id: number): Promise<ProductResponseDto> {
     return this.productService.remove(id);
   }
 }

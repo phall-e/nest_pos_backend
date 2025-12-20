@@ -98,4 +98,21 @@ export const permissions = [
         name: 'delete-product',
         description: 'Delete product',
     },
+    // Branch
+    {
+        name: 'read-branch',
+        description: 'Read branch',
+    },
+    {
+        name: 'create-branch',
+        description: 'Create branch',
+    },
+    {
+        name: 'update-branch',
+        description: 'Update branch',
+    },
+    {
+        name: 'delete-branch',
+        description: 'Delete branch',
+    },
 ]

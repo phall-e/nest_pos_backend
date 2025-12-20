@@ -20,7 +20,7 @@ import { ApiPaginatedResponse } from '@/common/paginations/api-paginated-respons
   version: '1'
 })
 export class CategoryController {
-  constructor(private readonly categoryService: CategoryService) {}
+  constructor(private categoryService: CategoryService) {}
 
   @Post()
   @Permissions('create-category')

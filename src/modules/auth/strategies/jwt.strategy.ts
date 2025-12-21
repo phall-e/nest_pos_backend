@@ -36,6 +36,7 @@ export class JwtStrategy extends PassportStrategy(Strategy){
             updatedAt: payload.updatedAt,
             deletedAt: payload.deletedAt,
             roles: payload.roles,
+            branches: payload.branches,
         };
     }
 }

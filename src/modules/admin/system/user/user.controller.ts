@@ -4,9 +4,12 @@ import { CreateUserRequestDto } from './dto/create-user-request.dto';
 import { UpdateUserRequestDto } from './dto/update-user-request.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { Permissions } from '@/modules/auth/decorators/permissions.decorator';
-import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiForbiddenResponse, ApiQuery, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { SWAGGER_TOKEN_NAME } from '@/swagger/config';
-import { PaginationResponseDto } from '@/common/paginations/pagination-response.dto';
+import { ApiPaginatedResponse } from '@/common/paginations/api-paginated-response.decorator';
+import { Paginate, type PaginateQuery } from 'nestjs-paginate';
+import { PaginatedResponse } from '@/common/paginations/paginated-response.type';
+import { UserEntity } from './entities/user.entity';
 
 @ApiTags('Users')
 @ApiBearerAuth(SWAGGER_TOKEN_NAME)
@@ -15,28 +18,27 @@ import { PaginationResponseDto } from '@/common/paginations/pagination-response.
   version: '1',
 })
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private userService: UserService) {}
 
   @Post()
   @Permissions('create-user')
   @ApiResponse({ status: 201, type: UserResponseDto, description: 'User created successfully' })
-  @ApiResponse({ status: 403, description: 'Forbidden.' })
-  create(@Body() dto: CreateUserRequestDto): Promise<UserResponseDto> {
+  @ApiForbiddenResponse({ description: 'Forbidden' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  public create(@Body() dto: CreateUserRequestDto): Promise<UserResponseDto> {
     return this.userService.create(dto);
   }
 
   @Get()
   @Permissions('read-user')
-  @ApiResponse({ status: 200, type: PaginationResponseDto<UserResponseDto>, description: 'List of all users' })
-  @ApiResponse({ status: 403, description: 'Forbidden.' })
-  @ApiQuery({ name: 'search', required: false, type: String, description: 'Search users' })
-  findAll() {
-    // return this.userService.list<UserEntity, UserResponseDto>(pagination);
+  @ApiPaginatedResponse(UserResponseDto)
+  public findAll(@Paginate() queery: PaginateQuery): Promise<PaginatedResponse<UserEntity, UserResponseDto>> {
+    return this.userService.list(queery);
   }
 
   @Get('select-options')
   @ApiResponse({ status: 200, type: [Object], description: 'List of users for selection' })
-  findAllForSelection(): Promise<{ id: number; username: string }[]> {
+  public findAllForSelection(): Promise<{ id: number; username: string }[]> {
     return this.userService.findAllForSelection();
   }
 
@@ -44,7 +46,7 @@ export class UserController {
   @Permissions('read-user')
   @ApiResponse({ status: 200, type: UserResponseDto, description: 'User details' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<UserResponseDto> {
+  public findOne(@Param('id', ParseIntPipe) id: number): Promise<UserResponseDto> {
     return this.userService.findOne(id);
   }
 
@@ -52,7 +54,7 @@ export class UserController {
   @Permissions('update-user')
   @ApiResponse({ status: 200, type: UserResponseDto, description: 'User updated successfully' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateUserRequestDto) {
+  public update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateUserRequestDto) {
     return this.userService.update(id, dto);
   }
 
@@ -60,7 +62,7 @@ export class UserController {
   @Permissions('delete-user')
   @ApiResponse({ status: 200, type: UserResponseDto, description: 'User deleted successfully' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  remove(@Param('id', ParseIntPipe) id: number): Promise<UserResponseDto> {
+  public remove(@Param('id', ParseIntPipe) id: number): Promise<UserResponseDto> {
     return this.userService.remove(id);
   }
 }

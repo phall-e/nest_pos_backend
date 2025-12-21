@@ -5,6 +5,8 @@ import { UserResponseDto } from "./dto/user-response.dto";
 import { UserEntity } from "./entities/user.entity";
 import { RoleEntity } from "../role/entities/role.entity";
 import { UpdateUserRequestDto } from "./dto/update-user-request.dto";
+import { BranchMapper } from "../../master-data/branch/branch.mapper";
+import { BranchEntity } from "../../master-data/branch/entities/branch.entity";
 
 export class UserMapper {
     public static async toDto(entity: UserEntity): Promise<UserResponseDto> {
@@ -21,6 +23,12 @@ export class UserMapper {
             dto.roles = await Promise.all((await entity.roles).map(RoleMapper.toDto));
         }
 
+        if (entity.branches) {
+            dto.branches = await Promise.all(
+                (await entity.branches).map(BranchMapper.toDto)
+            );
+        }
+
         return dto;
     }
 
@@ -33,9 +41,10 @@ export class UserMapper {
         entity.username = dto.username;
         entity.password = dto.password;
         entity.isAdmin = dto.isAdmin;
-        entity.isActive = dto.isAdmin;
+        entity.isActive = dto.isActive;
         entity.roles = Promise.resolve(dto.roles.map((id) => new RoleEntity({ id })));
-        
+        entity.branches = dto.branch.map((id) => new BranchEntity({ id }));
+
         return entity;
     }
 
@@ -44,7 +53,8 @@ export class UserMapper {
         entity.isAdmin = dto.isAdmin;
         entity.isActive = dto.isActive;
         entity.roles = Promise.resolve(dto.roles.map((id) => new RoleEntity(({ id }))));
-        
+        entity.branches = dto.branch.map((id) => new BranchEntity({ id }));
+
         return entity;
     }
 }

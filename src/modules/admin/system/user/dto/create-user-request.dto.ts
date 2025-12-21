@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsArray, IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { ArrayNotEmpty, IsArray, IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class CreateUserRequestDto {
     
@@ -31,4 +31,13 @@ export class CreateUserRequestDto {
     @IsBoolean()
     isActive?: boolean;
 
+    @ApiProperty({
+        type: [Number],       
+        example: [1, 2],
+        description: 'Branch IDs',
+    })
+    @IsArray()
+    @ArrayNotEmpty()
+    @IsInt({ each: true })
+    branch: number[];
 }

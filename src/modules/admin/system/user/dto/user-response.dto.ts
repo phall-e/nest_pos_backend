@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { RoleResponseDto } from "../../role/dto/role-response.dto";
+import { BranchResponseDto } from "@/modules/admin/master-data/branch/dto/branch-response.dto";
 
 export class UserResponseDto {
     @ApiProperty()
@@ -28,5 +29,8 @@ export class UserResponseDto {
     
     @ApiProperty()
     permissions: string[];
+
+    @ApiProperty()
+    branches: BranchResponseDto[];
     
 }

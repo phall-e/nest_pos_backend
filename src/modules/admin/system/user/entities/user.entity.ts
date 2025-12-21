@@ -1,6 +1,7 @@
 import { BaseEntity } from "@/database/entities/base.entity";
 import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import { RoleEntity } from "../../role/entities/role.entity";
+import { BranchEntity } from "@/modules/admin/master-data/branch/entities/branch.entity";
 
 @Entity({
     schema: 'admin',
@@ -56,6 +57,18 @@ export class UserEntity extends BaseEntity{
         }
     })
     roles: Promise<RoleEntity[]>;
+
+    @ManyToMany(() => BranchEntity, (branch) => branch.users, {
+        lazy: true,
+        cascade: true,
+    })
+    @JoinTable({
+        schema: 'admin',
+        name: 'users_branches',
+        joinColumn: { name: 'user_id' },
+        inverseJoinColumn: { name: 'branch_id' },
+    })
+    branches: BranchEntity[];
 
     constructor(partial?: Partial<UserEntity>) {
         super();

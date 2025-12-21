@@ -4,58 +4,46 @@ import { UpdateUserRequestDto } from './dto/update-user-request.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
-import { Filter, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { UserMapper } from './user.mapper';
-// import { BaseCrudService } from '@/common/services/base-crud.service';
-
-export const USER_FILTER_FIELDS = [
-  'username',
-]
+import { BasePaginationCrudService } from '@/common/services/base-pagination-crud.service';
+import * as bcrypt from 'bcrypt';
+import { PasswordHash } from '@/utils/password-hash.util';
 
 @Injectable()
-export class UserService{
-  
-  protected queryName: string = 'user';
-  protected SEARCH_FIELDS = ['username'];
-  protected FILTER_FIELDS = USER_FILTER_FIELDS;
-
+export class UserService extends BasePaginationCrudService<UserEntity, UserResponseDto>{
+  protected SORTABLE_COLUMNS = ['id', 'username', 'isAdmin', 'isActive'];
+  protected FILTER_COLUMNS = ['username', 'isAdmin', 'isActive'];
+  protected SEARCHABLE_COLUMNS = ['username', 'isAdmin', 'isActive'];
+  protected RELATIONSIP_FIELDS = ['branches'];
 
   constructor(
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
   ){
-    // super()
+    super()
   }
 
-  protected getMapperResponseEntityField() {
-    return UserMapper.toDto;
-  }
+  protected get repository(): Repository<UserEntity> {
+    return this.userRepository;
+  } 
 
-  protected getFilters() {
-    const filters: { [key: string]: Filter<UserEntity> } = {
-      isActive: (query, value) => {
-        return query.andWhere('user.isActive = :isActivev', {
-          isActive: value,
-        })
-      }
-    }
-
-    return filters;
+  protected getMapperReponseEntityField(entities: UserEntity): Promise<UserResponseDto> {
+    return UserMapper.toDto(entities);
   }
 
   public async create(dto: CreateUserRequestDto): Promise<UserResponseDto> {
     try {
-      let entity = UserMapper.toCreateEntity(dto);
+      let entity = UserMapper.toCreateEntity({
+        ...dto,
+        password: await PasswordHash.hash(dto.password),
+      });
+      // return UserMapper.toDto(entity);
       entity = await this.userRepository.save(entity);
       return UserMapper.toDto(entity);
     } catch (error) {
       throw new BadRequestException(error?.message);
     }
-  }
-
-  protected getListQuery() {
-    return this.userRepository.createQueryBuilder('user')
-      .leftJoinAndSelect('user.roles', 'roles');
   }
 
   public async findAllForSelection(): Promise<{ id: number; username: string }[]> {
@@ -79,7 +67,8 @@ export class UserService{
         relations: {
           roles: {
             permissions: true
-          }
+          },
+          branches: true,
         }
       });
       if (!entity) throw new NotFoundException();

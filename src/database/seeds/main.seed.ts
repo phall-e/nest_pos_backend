@@ -17,6 +17,8 @@ import { BranchEntity } from '@/modules/admin/master-data/branch/entities/branch
 import { branches } from './branch.seed';
 import { ProductsByBranchesEntity } from '@/modules/admin/master-data/products-by-branches/entities/products-by-branch.entity';
 import { productsByBranches } from './products-by-branches.seed';
+import { SupplierEntity } from '@/modules/admin/master-data/supplier/entities/supplier.entity';
+import { supplier } from './supplier.seed';
 
 export default class MainSeeder implements Seeder {
     public async run(database: DataSource): Promise<void> {
@@ -55,5 +57,6 @@ export default class MainSeeder implements Seeder {
         await database.manager.save(ProductEntity, products);
         await database.manager.save(BranchEntity, branches);
         await database.manager.save(ProductsByBranchesEntity, productsByBranches);
+        await database.manager.save(SupplierEntity, supplier);
     }
 }

@@ -3,8 +3,9 @@ import { CategoryModule } from './category/category.module';
 import { UomModule } from './uom/uom.module';
 import { ProductModule } from './product/product.module';
 import { BranchModule } from './branch/branch.module';
+import { ProductsByBranchesModule } from './products-by-branches/products-by-branches.module';
 
 @Module({
-  imports: [CategoryModule, UomModule, ProductModule, BranchModule]
+  imports: [CategoryModule, UomModule, ProductModule, BranchModule, ProductsByBranchesModule]
 })
 export class MasterDataModule {}

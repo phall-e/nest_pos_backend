@@ -1,8 +1,9 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { CategoryEntity } from "../../category/entities/category.entity";
 import { UomEntity } from "../../uom/entities/uom.entity";
 import { UserEntity } from "@/modules/admin/system/user/entities/user.entity";
 import { BaseEntity } from "@/database/entities/base.entity";
+import { ProductsByBranchesEntity } from "../../products-by-branches/entities/products-by-branch.entity";
 
 @Entity({
     schema: 'admin',
@@ -102,6 +103,9 @@ export class ProductEntity extends BaseEntity{
         name: 'created_by_id'
     })
     createdBy: UserEntity;
+
+    @OneToMany(() => ProductsByBranchesEntity, (pb) => pb.product)
+    productBranches: ProductsByBranchesEntity[];
 
     constructor(partial?: Partial<ProductEntity>) {
         super();

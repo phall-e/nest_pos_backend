@@ -1,6 +1,7 @@
 import { BaseEntity } from "@/database/entities/base.entity";
 import { UserEntity } from "@/modules/admin/system/user/entities/user.entity";
-import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { ProductsByBranchesEntity } from "../../products-by-branches/entities/products-by-branch.entity";
 
 @Entity({
     schema: 'admin',
@@ -76,6 +77,9 @@ export class BranchEntity extends BaseEntity {
 
     @ManyToMany(() => UserEntity, (user) => user.branches)
     users: Promise<UserEntity[]>;
+
+    @OneToMany(() => ProductsByBranchesEntity, (pb) => pb.branch)
+    productBranches: ProductsByBranchesEntity[];
 
     constructor(partial?: Partial<BranchEntity>) {
         super();

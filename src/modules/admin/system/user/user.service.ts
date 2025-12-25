@@ -29,18 +29,27 @@ export class UserService extends BasePaginationCrudService<UserEntity, UserRespo
   } 
 
   protected getMapperReponseEntityField(entities: UserEntity): Promise<UserResponseDto> {
-    return UserMapper.toDto(entities);
+    return UserMapper.toDtoWithRelationship(entities);
   }
 
   public async create(dto: CreateUserRequestDto): Promise<UserResponseDto> {
     try {
-      let entity = UserMapper.toCreateEntity({
+      let entity = await UserMapper.toCreateEntity({
         ...dto,
         password: await PasswordHash.hash(dto.password),
       });
-      // return UserMapper.toDto(entity);
       entity = await this.userRepository.save(entity);
-      return UserMapper.toDto(entity);
+      await this.userRepository
+        .createQueryBuilder()
+        .relation(UserEntity, 'branches')
+        .of(entity)
+        .add(dto.branch);
+      await this.userRepository
+        .createQueryBuilder()
+        .relation(UserEntity, 'role')
+        .of(entity)
+        .add(dto.roles);
+      return UserMapper.toDtoWithRelationship(entity);
     } catch (error) {
       throw new BadRequestException(error?.message);
     }
@@ -64,15 +73,10 @@ export class UserService extends BasePaginationCrudService<UserEntity, UserRespo
     try {
       const entity = await this.userRepository.findOne({
         where: { id },
-        relations: {
-          roles: {
-            permissions: true
-          },
-          branches: true,
-        }
       });
+      console.log(entity);
       if (!entity) throw new NotFoundException();
-      return UserMapper.toDto(entity);
+      return UserMapper.toDtoWithRelationship(entity);
     } catch (error) {
       throw new BadRequestException(error?.message);
     }
@@ -94,7 +98,7 @@ export class UserService extends BasePaginationCrudService<UserEntity, UserRespo
       if (!entity) throw new NotFoundException();
       entity = UserMapper.toUpdateEntity(entity, dto);
       entity =  await this.userRepository.save(entity);
-      return UserMapper.toDto(entity);
+      return UserMapper.toDtoWithRelationship(entity);
     } catch (error) { 
       throw new BadRequestException(error?.message);
     }
@@ -105,7 +109,7 @@ export class UserService extends BasePaginationCrudService<UserEntity, UserRespo
       let entity = await this.userRepository.findOneBy({ id });
       if (!entity) throw new NotFoundException();
       await this.userRepository.softDelete(id);
-      return UserMapper.toDto(entity);
+      return UserMapper.toDtoWithRelationship(entity);
     } catch (error) {
       throw new BadRequestException(error?.message);
     }

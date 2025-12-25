@@ -59,8 +59,9 @@ export class UserEntity extends BaseEntity{
     roles: Promise<RoleEntity[]>;
 
     @ManyToMany(() => BranchEntity, (branch) => branch.users, {
-        lazy: true,
         cascade: true,
+        lazy: false,
+        eager: false,
     })
     @JoinTable({
         schema: 'admin',
@@ -68,7 +69,7 @@ export class UserEntity extends BaseEntity{
         joinColumn: { name: 'user_id' },
         inverseJoinColumn: { name: 'branch_id' },
     })
-    branches: BranchEntity[];
+    branches: Promise<BranchEntity[]>;
 
     constructor(partial?: Partial<UserEntity>) {
         super();

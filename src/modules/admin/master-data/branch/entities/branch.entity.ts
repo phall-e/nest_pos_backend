@@ -75,7 +75,7 @@ export class BranchEntity extends BaseEntity {
     createdBy: UserEntity;
 
     @ManyToMany(() => UserEntity, (user) => user.branches)
-    users: UserEntity[];
+    users: Promise<UserEntity[]>;
 
     constructor(partial?: Partial<BranchEntity>) {
         super();

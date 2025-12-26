@@ -132,4 +132,29 @@ export const permissions = [
         name: 'delete-products-by-branches',
         description: 'Delete products by branches',
     },
+    // Purchase request
+    {
+        name: 'read-purchase-request',
+        description: 'Read purchase request',
+    },
+    {
+        name: 'create-purchase-request',
+        description: 'Create purchase request',
+    },
+    {
+        name: 'update-purchase-request',
+        description: 'Update purchase request',
+    },
+    {
+        name: 'delete-purchase-request',
+        description: 'Delete purchase request',
+    },
+    {
+        name: 'approve-purchase-request',
+        description: 'Approve purchase request',
+    },
+    {
+        name: 'cancel-purchase-request',
+        description: 'Cancel purchase request',
+    },
 ]

@@ -4,7 +4,7 @@ import { MinioController } from './minio.controller';
 import { MinioProvider } from './minio.provider';
 
 @Module({
-  providers: [MinioService],
+  providers: [MinioService, MinioProvider],
   controllers: [MinioController],
   exports: [MinioService],
 })

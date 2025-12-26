@@ -1,16 +1,16 @@
 import { MigrationInterface, QueryRunner, Table, TableForeignKey, TableUnique } from "typeorm";
 import { commonFields } from "../common.fields";
 
-const tableName = 'admin.supplier';
+const tableName = 'admin.purchase_request_items';
 
-export class SupplierMigration1764984877756 implements MigrationInterface {
+export class PurchaseRequestItemMigration1764984877758 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(
             new Table({
                 name: tableName,
                 columns: [
-                    {
+                    { 
                         name: 'id',
                         type: 'integer',
                         isPrimary: true,
@@ -18,52 +18,28 @@ export class SupplierMigration1764984877756 implements MigrationInterface {
                         isNullable: false,
                     },
                     {
-                        name: 'code',
-                        type: 'varchar',
-                        isUnique: true,
-                        length: '160',
+                        name: 'purchase_request_id',
+                        type: 'integer',
                         isNullable: false,
                     },
                     {
-                        name: 'name_en',
-                        type: 'varchar',
-                        length: '160',
+                        name: 'product_id',
+                        type: 'integer',
                         isNullable: false,
                     },
                     {
-                        name: 'name_kh',
-                        type: 'varchar',
-                        length: '160',
+                        name: 'quantity',
+                        type: 'decimal',
+                        precision: 14,
+                        scale: 2,
                         isNullable: false,
-                    },
-                    {
-                        name: 'phone_number',
-                        type: 'varchar',
-                        length: '160',
-                        isNullable: true,
-                    },
-                    {
-                        name: 'address',
-                        type: 'varchar',
-                        length: '160',
-                        isNullable: true,
                     },
                     {
                         name: 'note',
                         type: 'varchar',
                         length: '160',
                         isNullable: true,
-                    },
-                    {
-                        name: 'attachment',
-                        type: 'varchar',
-                        isNullable: true,
-                    },
-                    {
-                        name: 'created_by_id',
-                        type: 'integer',
-                        isNullable: true,
-                    },                   
+                    },         
                     ...commonFields,
                 ],
             }),
@@ -71,7 +47,8 @@ export class SupplierMigration1764984877756 implements MigrationInterface {
         );
 
         const foreignKeys = [
-            { column: 'created_by_id', refTable: 'admin.users' },
+            { column: 'purchase_request_id', refTable: 'admin.purchase_requests' },
+            { column: 'product_id', refTable: 'admin.products' },
         ];  
 
         for (const fk of foreignKeys) {

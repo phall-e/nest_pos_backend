@@ -54,6 +54,7 @@ export class PurchaseRequestMapper {
         entity.attachments = dto.attachments ? [...dto.attachments] : [];
         entity.status = dto.status;
         entity.createdById = dto.createdById;
+        entity.totalQuantity = dto.totalQuantity;
         
         if (dto.items && dto.items.length > 0) {
             entity.items = dto.items.map((itemDto) => {
@@ -72,6 +73,7 @@ export class PurchaseRequestMapper {
         entity.attachments = dto.attachments
         ? [...dto.attachments]
         : entity.attachments;
+        entity.totalQuantity = dto.totalQuantity;
         entity.status = dto.status;
 
         if (dto.items && dto.items.length > 0) {
@@ -79,7 +81,10 @@ export class PurchaseRequestMapper {
                 let itemEntity: PurchaseRequestItemEntity | null = null;
 
                 if (itemDto.id) {
-                    itemEntity = PurchaseRequestItemMapper.toUpdateEntity(new PurchaseRequestItemEntity, itemDto);
+                    itemEntity = PurchaseRequestItemMapper.toUpdateEntity(
+                        new PurchaseRequestItemEntity({ id: itemDto.id }), 
+                        { ...itemDto }
+                    );
                 } else {
                     itemEntity = PurchaseRequestItemMapper.toCreateEntity(itemDto);
                 }

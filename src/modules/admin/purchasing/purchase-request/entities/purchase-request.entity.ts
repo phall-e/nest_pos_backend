@@ -105,7 +105,7 @@ export class PurchaseRequestEntity extends BaseEntity{
     })
     totalQuantity: number;
 
-    @OneToMany(() => PurchaseRequestItemEntity, (item) => item.purchaseRequest, { cascade: true })
+    @OneToMany(() => PurchaseRequestItemEntity, (item) => item.purchaseRequest, { cascade: true})
     items: PurchaseRequestItemEntity[];
 
     constructor(partial?: Partial<PurchaseRequestEntity>){

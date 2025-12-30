@@ -9,6 +9,8 @@ import { PurchaseRequestResponseDto } from './dto/purchase-request-response.dto'
 import { PurchaseRequestMapper } from './purchase-request.mapper';
 import { ModuleStatus } from '@/common/enums/status.enum';
 import { BasePaginationCrudService } from '@/common/services/base-pagination-crud.service';
+import { handleTransactionCodeGeneration } from '@/utils/transaction-code-generation.util';
+import { PurchaseRequestItemEntity } from './entities/purchase-request-item.entity';
 
 @Injectable()
 export class PurchaseRequestService extends BasePaginationCrudService<PurchaseRequestEntity, PurchaseRequestResponseDto> {
@@ -20,6 +22,8 @@ export class PurchaseRequestService extends BasePaginationCrudService<PurchaseRe
   constructor(
     @InjectRepository(PurchaseRequestEntity)
     private purchaseRequestRepository: Repository<PurchaseRequestEntity>,
+    @InjectRepository(PurchaseRequestItemEntity)
+    private purchaseRequestItemRepository: Repository<PurchaseRequestItemEntity>,
   ){
     super();
   }
@@ -37,6 +41,15 @@ export class PurchaseRequestService extends BasePaginationCrudService<PurchaseRe
       let entity = PurchaseRequestMapper.toCreateEntity(dto);
       entity = await this.purchaseRequestRepository.save(entity);
       return PurchaseRequestMapper.toDto(entity);
+    } catch (error) {
+      handleError(error);
+    }
+  }
+
+  public async nextCode(): Promise<string> {
+    try {
+      const nextCode = await handleTransactionCodeGeneration(this.purchaseRequestRepository, 'PR');
+      return nextCode;
     } catch (error) {
       handleError(error);
     }
@@ -81,13 +94,42 @@ export class PurchaseRequestService extends BasePaginationCrudService<PurchaseRe
     }
   }
 
-  public async update(id: number, dto: UpdatePurchaseRequestRequestDto): Promise<PurchaseRequestResponseDto> {
+  public async update(
+    id: number,
+    dto: UpdatePurchaseRequestRequestDto,
+  ): Promise<PurchaseRequestResponseDto> {
     try {
-      let entity = await this.purchaseRequestRepository.findOneBy({ id });
+      let entity = await this.purchaseRequestRepository.findOne({
+        where: { id },
+        relations: { items: true },
+      });
+
       if (!entity) throw new NotFoundException();
+
+      const existingItemIds = entity.items.map(i => i.id);
+      const dtoItemIds = dto.items?.map(i => i.id) ?? [];
+
+      const itemsToRemove = existingItemIds.filter(
+        id => !dtoItemIds.includes(id),
+      );
+
+      if (itemsToRemove.length > 0) {
+        await this.purchaseRequestItemRepository.softDelete(itemsToRemove);
+      }
+
       entity = PurchaseRequestMapper.toUpdateEntity(entity, dto);
       entity = await this.purchaseRequestRepository.save(entity);
+
+      entity = await this.purchaseRequestRepository.findOne({
+        where: { id },
+        relations: {
+          items: true,
+        }
+      });
+
+      // ✅ SAFE DTO RETURN
       return PurchaseRequestMapper.toDto(entity);
+
     } catch (error) {
       handleError(error);
     }

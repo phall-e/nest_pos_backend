@@ -42,11 +42,8 @@ export class CreatePurchaseRequestRequestDto {
     createdById: number;
 
     @ApiProperty({ type: [CreatePurchaseRequestItemRequestDto] })
-    @ValidateNested({ each: true })
-    @Type(() => CreatePurchaseRequestItemRequestDto)
-    @ArrayMinSize(1)
+    @ValidateNested({ each: true }) // Validate each item
+    @Type(() => CreatePurchaseRequestItemRequestDto) // Transform each item into the correct DTO type
+    @ArrayMinSize(1) // Ensure at least 1 item is provided
     items: CreatePurchaseRequestItemRequestDto[];
-
-
-    
 }

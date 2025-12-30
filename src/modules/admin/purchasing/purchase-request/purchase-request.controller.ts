@@ -54,6 +54,12 @@ export class PurchaseRequestController {
     return this.purchaseRequestService.list(query);
   }
 
+  @Get('next-code')
+  @ApiResponse({ status: 200, type: String, description: 'Get next code for purchase request' })
+  public nextCode(): Promise<string> {
+    return this.purchaseRequestService.nextCode();
+  }
+
   @Get('select-options/:branchId')
   @ApiResponse({ status: 200, type: Object, description: 'List all of purchase request for selection' })
   public findAllForSelection(@Param('branchId', ParseIntPipe) branchId: number): Promise<{ id: number; code: string}[]> {

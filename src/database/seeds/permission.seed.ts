@@ -157,4 +157,29 @@ export const permissions = [
         name: 'cancel-purchase-request',
         description: 'Cancel purchase request',
     },
+    // Purchase order
+    {
+        name: 'read-purchase-order',
+        description: 'Read purchase order',
+    },
+    {
+        name: 'create-purchase-order',
+        description: 'Create purchase order',
+    },
+    {
+        name: 'update-purchase-order',
+        description: 'Update purchase order',
+    },
+    {
+        name: 'delete-purchase-order',
+        description: 'Delete purchase order',
+    },
+    {
+        name: 'approve-purchase-order',
+        description: 'Approve purchase order',
+    },
+    {
+        name: 'cancel-purchase-order',
+        description: 'Cancel purchase order',
+    },
 ]

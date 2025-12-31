@@ -182,4 +182,29 @@ export const permissions = [
         name: 'cancel-purchase-order',
         description: 'Cancel purchase order',
     },
+    // Purchase receipt
+    {
+        name: 'read-purchase-receipt',
+        description: 'Read purchase receipt',
+    },
+    {
+        name: 'create-purchase-receipt',
+        description: 'Create purchase receipt',
+    },
+    {
+        name: 'update-purchase-receipt',
+        description: 'Update purchase receipt',
+    },
+    {
+        name: 'delete-purchase-receipt',
+        description: 'Delete purchase receipt',
+    },
+    {
+        name: 'approve-purchase-receipt',
+        description: 'Approve purchase receipt',
+    },
+    {
+        name: 'cancel-purchase-receipt',
+        description: 'Cancel purchase receipt',
+    },
 ]

@@ -207,4 +207,21 @@ export const permissions = [
         name: 'cancel-purchase-receipt',
         description: 'Cancel purchase receipt',
     },
+    // Stock
+    {
+        name: 'read-stock',
+        description: 'Read stock',
+    },
+    {
+        name: 'create-stock',
+        description: 'Create stock',
+    },
+    {
+        name: 'update-stock',
+        description: 'Update stock',
+    },
+    {
+        name: 'delete-stock',
+        description: 'Delete stock',
+    },
 ]

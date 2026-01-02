@@ -224,4 +224,38 @@ export const permissions = [
         name: 'delete-stock',
         description: 'Delete stock',
     },
+    // Stock in
+    {
+        name: 'read-stock-in',
+        description: 'Read stock-in',
+    },
+    {
+        name: 'create-stock-in',
+        description: 'Create stock-in',
+    },
+    {
+        name: 'update-stock-in',
+        description: 'Update stock-in',
+    },
+    {
+        name: 'delete-stock-in',
+        description: 'Delete stock-in',
+    },
+    // Stock adjustment
+    {
+        name: 'read-stock-adjustment',
+        description: 'Read stock-adjustment',
+    },
+    {
+        name: 'create-stock-adjustment',
+        description: 'Create stock-adjustment',
+    },
+    {
+        name: 'update-stock-adjustment',
+        description: 'Update stock-adjustment',
+    },
+    {
+        name: 'delete-stock-adjustment',
+        description: 'Delete stock-adjustment',
+    },
 ]

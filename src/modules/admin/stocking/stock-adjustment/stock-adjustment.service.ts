@@ -69,7 +69,7 @@ export class StockAdjustmentService extends BasePaginationCrudService<StockAdjus
 
   public async nextCode(): Promise<string> {
     try {
-      const nextCode = await handleTransactionCodeGeneration(this.stockAdjustmentRepository, 'ST');
+      const nextCode = await handleTransactionCodeGeneration(this.stockAdjustmentRepository, 'SDJ');
       return nextCode;
     } catch (error) {
       handleError(error);

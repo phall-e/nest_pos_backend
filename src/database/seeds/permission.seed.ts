@@ -258,4 +258,21 @@ export const permissions = [
         name: 'delete-stock-adjustment',
         description: 'Delete stock-adjustment',
     },
+    // Stock transfer
+    {
+        name: 'read-stock-transfer',
+        description: 'Read stock-transfer',
+    },
+    {
+        name: 'create-stock-transfer',
+        description: 'Create stock-transfer',
+    },
+    {
+        name: 'update-stock-transfer',
+        description: 'Update stock-transfer',
+    },
+    {
+        name: 'delete-stock-transfer',
+        description: 'Delete stock-transfer',
+    },
 ]

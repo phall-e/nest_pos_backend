@@ -19,7 +19,6 @@ export class CreateProductRequestDto {
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsNumber()
     unitPrice: number;
 
     @ApiProperty()

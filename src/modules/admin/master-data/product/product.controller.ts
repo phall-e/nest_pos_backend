@@ -41,6 +41,13 @@ export class ProductController {
     return this.productService.list(query);
   }
 
+  @Get('next-code')
+  @ApiResponse({ status: 200, type: String, description: 'Get next code for product' })
+  public nextCode(): Promise<string> {
+    return this.productService.nextCode();
+  }
+
+
   @Get('select-options')
   @ApiResponse({ status: 200, type: [Object], description: 'List of products for selection' })
   public findAllForSelection(): Promise<{ id: number; nameEn: string; nameKh: string }[]> {

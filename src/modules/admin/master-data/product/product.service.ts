@@ -7,6 +7,8 @@ import { ProductResponseDto } from './dto/product-response.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProductMapper } from './product.mapper';
+import { handleTransactionCodeGeneration } from '@/utils/transaction-code-generation.util';
+import { handleError } from '@/utils/handle-error.util';
 
 @Injectable()
 export class ProductService extends BasePaginationCrudService<ProductEntity, ProductResponseDto>{
@@ -37,6 +39,15 @@ export class ProductService extends BasePaginationCrudService<ProductEntity, Pro
       return ProductMapper.toDto(entity);
     } catch (error) {
       throw new BadRequestException(error?.message);
+    }
+  }
+
+  public async nextCode(): Promise<string> {
+    try {
+      const nextCode = await handleTransactionCodeGeneration(this.productRepository, 'PD', false);
+      return nextCode;
+    } catch (error) {
+      handleError(error);
     }
   }
 

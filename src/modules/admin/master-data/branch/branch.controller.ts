@@ -41,6 +41,12 @@ export class BranchController {
     return this.branchService.list(query);
   }
 
+  @Get('next-code')
+  @ApiResponse({ status: 200, type: String, description: 'Get next code for branch' })
+  public nextCode(): Promise<string> {
+    return this.branchService.nextCode();
+  }
+
   @Get('select-options')
   @ApiResponse({ status: 200, type: [Object], description: 'List all of branch for selection' })
   public findAllForSelection(): Promise<{ id: number; nameEn: string; nameKh: string }[]> {

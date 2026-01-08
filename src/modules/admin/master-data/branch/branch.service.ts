@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BranchMapper } from './branch.mapper';
 import { handleError } from '@/utils/handle-error.util';
+import { handleTransactionCodeGeneration } from '@/utils/transaction-code-generation.util';
 
 @Injectable()
 export class BranchService extends BasePaginationCrudService<BranchEntity, BranchResponseDto>{
@@ -36,6 +37,15 @@ export class BranchService extends BasePaginationCrudService<BranchEntity, Branc
       let entity = BranchMapper.toCreateEntity(dto);
       entity = await this.branchRepository.save(entity);
       return BranchMapper.toDto(entity);
+    } catch (error) {
+      handleError(error);
+    }
+  }
+
+  public async nextCode(): Promise<string> {
+    try {
+      const nextCode = await handleTransactionCodeGeneration(this.branchRepository, 'BD', false, 4);
+      return nextCode;
     } catch (error) {
       handleError(error);
     }

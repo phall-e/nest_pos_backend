@@ -46,7 +46,7 @@ export class UserService extends BasePaginationCrudService<UserEntity, UserRespo
         .add(dto.branch);
       await this.userRepository
         .createQueryBuilder()
-        .relation(UserEntity, 'role')
+        .relation(UserEntity, 'roles')
         .of(entity)
         .add(dto.roles);
       return UserMapper.toDtoWithRelationship(entity);

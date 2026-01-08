@@ -40,6 +40,12 @@ export class CategoryController {
     return this.categoryService.list(query);
   }
 
+  @Get('next-code')
+  @ApiResponse({ status: 200, type: String, description: 'Get next code for category' })
+  public nextCode(): Promise<string> {
+    return this.categoryService.nextCode();
+  }
+
   @Get('select-options')
   @ApiResponse({ status: 200, type: [Object], description: 'List of categories for selection' })
   public findAllForSelection(): Promise<{ id: number; nameEn: string; nameKh: string }[]> {

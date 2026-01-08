@@ -7,6 +7,8 @@ import { CategoryEntity } from './entities/category.entity';
 import { Repository } from 'typeorm';
 import { CategoryMapper } from './category.mapper';
 import { BasePaginationCrudService } from '@/common/services/base-pagination-crud.service';
+import { handleError } from '@/utils/handle-error.util';
+import { handleTransactionCodeGeneration } from '@/utils/transaction-code-generation.util';
 
 @Injectable()
 export class CategoryService extends BasePaginationCrudService<CategoryEntity, CategoryResponseDto> {
@@ -37,6 +39,15 @@ export class CategoryService extends BasePaginationCrudService<CategoryEntity, C
       return CategoryMapper.toDto(entity);
     } catch (error) {
       throw new BadRequestException(error?.message);
+    }
+  }
+
+  public async nextCode(): Promise<string> {
+    try {
+      const nextCode = await handleTransactionCodeGeneration(this.categoryRepository, 'CT', false, 7);
+      return nextCode;
+    } catch (error) {
+      handleError(error);
     }
   }
 

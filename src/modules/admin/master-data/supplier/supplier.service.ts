@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { SupplierEntity } from './entities/supplier.entity';
 import { Repository } from 'typeorm';
 import { BasePaginationCrudService } from '@/common/services/base-pagination-crud.service';
+import { handleTransactionCodeGeneration } from '@/utils/transaction-code-generation.util';
 
 @Injectable()
 export class SupplierService extends BasePaginationCrudService<SupplierEntity, SupplierResponseDto>{
@@ -36,6 +37,15 @@ export class SupplierService extends BasePaginationCrudService<SupplierEntity, S
       let entity = SupplierMapper.toCreateEntity(dto);
       entity = await this.supplierRepository.save(entity);
       return SupplierMapper.toDto(entity);
+    } catch (error) {
+      handleError(error);
+    }
+  }
+
+  public async nextCode(): Promise<string> {
+    try {
+      const nextCode = await handleTransactionCodeGeneration(this.supplierRepository, 'SP', false, 5);
+      return nextCode;
     } catch (error) {
       handleError(error);
     }

@@ -43,6 +43,12 @@ export class SupplierController {
     return this.supplierService.list(query);
   }
 
+  @Get('next-code')
+  @ApiResponse({ status: 200, type: String, description: 'Get next code for supplier' })
+  public nextCode(): Promise<string> {
+    return this.supplierService.nextCode();
+  }
+
   @Get('select-options')
   @ApiResponse({ status: 200, type: [Object], description: 'List all supplier for selection' })
   public findAllForSelections(): Promise<{ id: number; code: string; nameEn: string; nameKh: string }[]> {

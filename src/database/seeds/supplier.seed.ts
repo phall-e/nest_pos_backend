@@ -1,6 +1,6 @@
 export const supplier = [
     {
-        code: 'SP00002',
+        code: 'SP00001',
         nameEn: 'Sok Thida',
         nameKh: 'សុខ ធីតា',
         phoneNumber: '082345654',
@@ -8,7 +8,7 @@ export const supplier = [
         createdById: 1,
     },
     {
-        code: 'SP00003',
+        code: 'SP00002',
         nameEn: 'Chantha',
         nameKh: 'ចន្ថា',
         phoneNumber: '0345678',

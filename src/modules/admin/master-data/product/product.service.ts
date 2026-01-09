@@ -51,11 +51,12 @@ export class ProductService extends BasePaginationCrudService<ProductEntity, Pro
     }
   }
 
-  public async findAllForSelection(): Promise<{id: number; nameEn: string; nameKh: string}[]> {
+  public async findAllForSelection(): Promise<{id: number; code: string; nameEn: string; nameKh: string}[]> {
     try {
       const entities = await this.productRepository.find({
         select: {
           id: true,
+          code: true,
           nameEn: true,
           nameKh: true,
         }

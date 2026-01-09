@@ -13,7 +13,6 @@ export class CreatePurchaseRequestItemRequestDto {
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsNumber()
     quantity: number;
 
     @ApiProperty()

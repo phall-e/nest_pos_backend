@@ -50,7 +50,7 @@ export class ProductController {
 
   @Get('select-options')
   @ApiResponse({ status: 200, type: [Object], description: 'List of products for selection' })
-  public findAllForSelection(): Promise<{ id: number; code: string; nameEn: string; nameKh: string }[]> {
+  public findAllForSelection(): Promise<{ id: number; code: string; nameEn: string; nameKh: string; categoryId: number; uomId: number }[]> {
     return this.productService.findAllForSelection();
   }
 

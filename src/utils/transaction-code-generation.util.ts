@@ -1,4 +1,3 @@
-import { BadRequestException } from "@nestjs/common";
 import { ObjectLiteral } from "typeorm";
 
 export const handleTransactionCodeGeneration = async <T extends ObjectLiteral>(
@@ -12,7 +11,7 @@ export const handleTransactionCodeGeneration = async <T extends ObjectLiteral>(
         const nextNumber = count + 1;
         const date = new Date();
         const currentYear = isDate ? date.getFullYear() : '';
-        const code =  `${prefix}${currentYear}-${String(nextNumber).padStart(digits, '0')}`;
+        const code =  `${prefix}${currentYear}${String(nextNumber).padStart(digits, '0')}`;
         return code;
     } catch (error) {
         throw error;

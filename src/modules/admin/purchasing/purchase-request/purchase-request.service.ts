@@ -17,7 +17,7 @@ export class PurchaseRequestService extends BasePaginationCrudService<PurchaseRe
   protected SORTABLE_COLUMNS = ['code', 'requestDate', 'branchId', 'createdById'];
   protected FILTER_COLUMNS = ['code', 'requestDate', 'branch.nameEn', 'branch.nameKh', 'createdBy.username'];
   protected SEARCHABLE_COLUMNS = ['code', 'branch.nameEn', 'branch.nameKh', 'createdBy.username', 'description'];
-  protected RELATIONSIP_FIELDS = ['branch', 'createdBy'];
+  protected RELATIONSIP_FIELDS = ['branch', 'createdBy', 'approvedBy'];
 
   constructor(
     @InjectRepository(PurchaseRequestEntity)

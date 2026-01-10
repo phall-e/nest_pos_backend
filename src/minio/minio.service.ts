@@ -119,5 +119,9 @@ export class MinioService{
     async uploadDocument(filePath: string, file: Buffer) {
         return this.uploadFile('documents', filePath, file);
     }
+
+    async deleteFile(bucket: string, objectName: string): Promise<void> {
+        await this.client.removeObject(bucket, objectName)
+    }
    
 }

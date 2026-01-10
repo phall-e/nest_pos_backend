@@ -1,5 +1,5 @@
 import { SWAGGER_TOKEN_NAME } from '@/swagger/config';
-import { Controller, Get, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { MinioService } from './minio.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -12,12 +12,12 @@ import { UploadResponseDto } from './dto/upload-response.dto';
     version: '1',
 })
 export class MinioController {
-    constructor(private minioSerivce: MinioService){}
+    constructor(private minioService: MinioService){}
 
     @Get(':path')
     async viewFile(@Param('path') path: string) {
         console.log(path);
-        return await this.minioSerivce.getPreviewUrl(path);
+        return await this.minioService.getPreviewUrl(path);
     }
 
     @Post('upload')
@@ -51,9 +51,18 @@ export class MinioController {
         },
     }))
     public async uploadFile(@UploadedFile() file: Express.Multer.File){
-        return await this.minioSerivce.uploadImage(
+        return await this.minioService.uploadImage(
             new Date().getTime() + '-' + file.originalname,
             file.buffer,
         );
+    }
+
+    @Delete('delete')
+        async deleteFile(
+        @Query('bucket') bucket: string,
+        @Query('object') object: string,
+    ) {
+        await this.minioService.deleteFile(bucket, object)
+        return { message: 'File deleted successfully' }
     }
 }

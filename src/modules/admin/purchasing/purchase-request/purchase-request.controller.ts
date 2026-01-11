@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, Put, Query } from '@nestjs/common';
 import { PurchaseRequestService } from './purchase-request.service';
 import { CreatePurchaseRequestRequestDto } from './dto/create-purchase-request-request.dto';
 import { UpdatePurchaseRequestRequestDto } from './dto/update-purchase-request.dto';
@@ -36,7 +36,7 @@ export class PurchaseRequestController {
     });
   }
 
-  @Post(':id')
+  @Post('approve/:id')
   @Permissions('approve-purchase-request')
   @ApiResponse({ status: 200, type: PurchaseRequestResponseDto, description: 'Purchase request is approved' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
@@ -60,10 +60,13 @@ export class PurchaseRequestController {
     return this.purchaseRequestService.nextCode();
   }
 
-  @Get('select-options/:branchId')
+  @Get('select-options/:branchId/:isApproved')
   @ApiResponse({ status: 200, type: Object, description: 'List all of purchase request for selection' })
-  public findAllForSelection(@Param('branchId', ParseIntPipe) branchId: number): Promise<{ id: number; code: string}[]> {
-    return this.purchaseRequestService.findAllForSelection(branchId);
+  public findAllForSelection(
+    @Param('branchId', ParseIntPipe) branchId: number,
+    @Param('isApproved') isApproved: boolean
+  ): Promise<{ id: number; code: string; createdById: number}[]> {
+    return this.purchaseRequestService.findAllForSelection(branchId, isApproved);
   }
 
   @Get(':id')

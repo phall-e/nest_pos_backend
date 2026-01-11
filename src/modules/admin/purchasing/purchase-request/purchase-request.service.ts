@@ -55,26 +55,38 @@ export class PurchaseRequestService extends BasePaginationCrudService<PurchaseRe
     }
   }
 
-  public async findAllForSelection(branchId: number): Promise<{ id: number; code: string }[]> {
+  public async findAllForSelection(
+    branchId: number,
+    isApproved: boolean,
+  ): Promise<{ id: number; code: string; createdById: number }[]> {
     try {
+      const where: any = {
+        branchId,
+      }
+
+      // ✅ Apply condition only when isApproved = true
+      if (isApproved) {
+        where.status = ModuleStatus.APPROVED
+      }
+
       const entities = await this.purchaseRequestRepository.find({
-        where: {
-          status: ModuleStatus.PROCESSING,
-          branchId: branchId,
-        },
+        where,
         select: {
           id: true,
           code: true,
+          createdById: true,
         },
         order: {
           id: 'DESC',
-        }
-      });
-      return entities;
+        },
+      })
+
+      return entities
     } catch (error) {
-      handleError(error);
+      handleError(error)
     }
   }
+
 
   public async findOne(id: number): Promise<PurchaseRequestResponseDto> {
     try {

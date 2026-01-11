@@ -13,12 +13,10 @@ export class CreatePurchaseOrderItemRequestDto {
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsNumber()
     quantity: number;
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsNumber()
     unitPrice: number;
 
     @ApiProperty()

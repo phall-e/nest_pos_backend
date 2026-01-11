@@ -47,6 +47,12 @@ export class ProductController {
     return this.productService.nextCode();
   }
 
+  @Get('not-in/:ids')
+  @ApiResponse({ status: 200, type: String, description: 'Get products list not in ids' })
+  public findNotIn(@Param('ids') ids: number[]): Promise<ProductEntity[]> {
+    return this.productService.findNotIn(ids);
+  }
+
 
   @Get('select-options')
   @ApiResponse({ status: 200, type: [Object], description: 'List of products for selection' })

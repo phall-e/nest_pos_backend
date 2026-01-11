@@ -87,6 +87,24 @@ export class ProductService extends BasePaginationCrudService<ProductEntity, Pro
     }
   }
 
+  public async findNotIn(ids: number[]): Promise<ProductEntity[]> {
+    try {
+      const query = this.productRepository
+        .createQueryBuilder('product')
+
+      // ✅ Handle empty array safely
+      if (ids?.length) {
+        query.where('product.id NOT IN (:...ids)', { ids })
+      }
+
+      const entities = await query.getMany();
+      return entities;
+    } catch (error) {
+      handleError(error)
+    }
+  }
+
+
   public async update(id: number, dto: UpdateProductRequestDto): Promise<ProductResponseDto> {
     try {
       let entity = await this.productRepository.findOneBy({ id });

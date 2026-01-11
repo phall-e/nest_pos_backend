@@ -50,7 +50,7 @@ export class PurchaseOrderService extends BasePaginationCrudService<PurchaseOrde
             id: entity.purchaseRequestId,
           },
           {
-            status: ModuleStatus.PROCESSING,
+            status: ModuleStatus.COMPLETED,
           }
         );
       }

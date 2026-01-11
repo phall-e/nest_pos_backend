@@ -72,10 +72,13 @@ export class PurchaseOrderController {
     return this.purchaseOrderService.nextCode();
   }
 
-  @Get('select-options/:branchId')
+  @Get('select-options/:branchId/:isApproved')
   @ApiResponse({ status: 200, type: Object, description: 'List all of purchase order for selection' })
-  public findAllForSelection(@Param('branchId', ParseIntPipe) branchId: number): Promise<{ id: number; code: string}[]> {
-    return this.purchaseOrderService.findAllForSelection(branchId);
+  public findAllForSelection(
+    @Param('branchId', ParseIntPipe) branchId: number,
+     @Param('isApproved') isApproved: boolean
+  ): Promise<{ id: number; code: string; createdById: number}[]> {
+    return this.purchaseOrderService.findAllForSelection(branchId, isApproved);
   }
 
   @Get(':id')

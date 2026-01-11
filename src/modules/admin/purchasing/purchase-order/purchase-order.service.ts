@@ -70,21 +70,31 @@ export class PurchaseOrderService extends BasePaginationCrudService<PurchaseOrde
     }
   }
 
-  public async findAllForSelection(branchId: number): Promise<{ id: number; code: string}[]> {
+  public async findAllForSelection(
+    branchId: number,
+    isApproved: boolean,
+  ): Promise<{ id: number; code: string; createdById: number}[]> {
     try {
+      const where: any = {
+        branchId,
+      }
+
+      // ✅ Apply condition only when isApproved = true
+      if (isApproved) {
+        where.status = ModuleStatus.APPROVED
+      }
+
       const entities = await this.purchaseOrderRepository.find({
-        where: {
-          status: ModuleStatus.APPROVED,
-          branchId: branchId,
+        where,
+        select: {
+          id: true,
+          code: true,
+          createdById: true,
         },
         order: {
           id: 'DESC',
         },
-        select: {
-          id: true,
-          code: true,
-        },
-      });
+      })
       return entities;
     } catch (error) {
       handleError(error);

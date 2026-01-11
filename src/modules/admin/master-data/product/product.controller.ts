@@ -48,7 +48,7 @@ export class ProductController {
   }
 
   @Get('not-in/:ids')
-  @ApiResponse({ status: 200, type: String, description: 'Get products list not in ids' })
+  @ApiResponse({ status: 200, type: [ProductEntity], description: 'Get products list not in ids' })
   public findNotIn(@Param('ids') ids: number[]): Promise<ProductEntity[]> {
     return this.productService.findNotIn(ids);
   }

@@ -179,7 +179,7 @@ export class PurchaseReceiptEntity extends BaseEntity{
     })
     totalDiscount: number;
 
-    @OneToMany(() => PurchaseReceiptItemEntity, (item) => item.purchaseReceipt)
+    @OneToMany(() => PurchaseReceiptItemEntity, (item) => item.purchaseReceipt, { cascade: true })
     items: PurchaseReceiptItemEntity[];
 
     constructor(partial?: Partial<PurchaseReceiptEntity>){

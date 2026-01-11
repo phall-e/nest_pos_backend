@@ -48,7 +48,7 @@ export class PurchaseReceiptService extends BasePaginationCrudService<PurchaseRe
         await this.purchaseOrderRepository.update(
           { id: entity.id },
           {
-            status: ModuleStatus.PROCESSING,
+            status: ModuleStatus.COMPLETED,
           }
         );
       }
@@ -67,18 +67,31 @@ export class PurchaseReceiptService extends BasePaginationCrudService<PurchaseRe
     }
   }
 
-  public async findAllForSelection(branchId: number): Promise<{id: number; code: string }[]> {
+  public async findAllForSelection(
+    branchId: number,
+    isApproved: boolean,
+  ): Promise<{id: number; code: string; createdById: number }[]> {
     try {
-      const entities = await this.purchaseReceiptRepository.find({
-        where: {
-          branchId: branchId,
-          status: ModuleStatus.APPROVED,
-        },
+      const where: any = {
+        branchId,
+      }
+
+      // ✅ Apply condition only when isApproved = true
+      if (isApproved) {
+        where.status = ModuleStatus.APPROVED
+      }
+
+      const entities = await this.purchaseOrderRepository.find({
+        where,
         select: {
           id: true,
           code: true,
-        }
-      });
+          createdById: true,
+        },
+        order: {
+          id: 'DESC',
+        },
+      })
       return entities;
     } catch (error) {
       handleError(error);

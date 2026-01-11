@@ -13,17 +13,14 @@ export class CreatePurchaseReceiptItemRequestDto {
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsNumber()
     quantity: number;
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsNumber()
     unitPrice: number;
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsNumber()
     discount: number;
 
     @ApiProperty()

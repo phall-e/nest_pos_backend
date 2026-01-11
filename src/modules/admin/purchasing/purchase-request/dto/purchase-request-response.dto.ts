@@ -23,6 +23,9 @@ export class PurchaseRequestResponseDto {
     @ApiProperty()
     description: string;
 
+    @ApiProperty()
+    reason: string;
+
     @ApiProperty({ type: [PurchaseRequestAttachment] })
     attachments: PurchaseRequestAttachment[];
 

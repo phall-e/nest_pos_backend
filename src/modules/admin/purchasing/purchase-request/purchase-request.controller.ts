@@ -12,6 +12,7 @@ import { PaginatedResponse } from '@/common/paginations/paginated-response.type'
 import { PurchaseRequestEntity } from './entities/purchase-request.entity';
 import { ApiPaginatedResponse } from '@/common/paginations/api-paginated-response.decorator';
 import { SWAGGER_TOKEN_NAME } from '@/swagger/config';
+import { CancelPurchaseRequestRequestDto } from './dto/cancel-purchase-request-request.dto';
 
 @ApiTags('Purchase Request')
 @ApiBearerAuth(SWAGGER_TOKEN_NAME)
@@ -45,6 +46,14 @@ export class PurchaseRequestController {
     @CurrentUser() user: UserEntity
   ): Promise<PurchaseRequestResponseDto>{
     return this.purchaseRequestService.approve(id, user.id);
+  }
+
+  @Post('cancel/:id')
+  @Permissions('cancel-purchase-request')
+  @ApiResponse({ status: 200, type: PurchaseRequestResponseDto, description: 'Purchase request is canceled successfully' })
+  @ApiForbiddenResponse({ description: 'Forbidden' })
+  public cancel(@Param('id', ParseIntPipe) id: number, @Body() dto: CancelPurchaseRequestRequestDto): Promise<PurchaseRequestResponseDto> {
+    return this.purchaseRequestService.cancel(id, dto);
   }
 
   @Get()

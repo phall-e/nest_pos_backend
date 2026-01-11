@@ -11,6 +11,7 @@ import { ModuleStatus } from '@/common/enums/status.enum';
 import { BasePaginationCrudService } from '@/common/services/base-pagination-crud.service';
 import { handleTransactionCodeGeneration } from '@/utils/transaction-code-generation.util';
 import { PurchaseRequestItemEntity } from './entities/purchase-request-item.entity';
+import { CancelPurchaseRequestRequestDto } from './dto/cancel-purchase-request-request.dto';
 
 @Injectable()
 export class PurchaseRequestService extends BasePaginationCrudService<PurchaseRequestEntity, PurchaseRequestResponseDto> {
@@ -173,6 +174,24 @@ export class PurchaseRequestService extends BasePaginationCrudService<PurchaseRe
           approvedById: userId,
         }
       );
+      return PurchaseRequestMapper.toDto(entity);
+    } catch (error) {
+      handleError(error);
+    }
+  }
+
+  public async cancel(id: number, dto: CancelPurchaseRequestRequestDto): Promise<PurchaseRequestResponseDto> {
+    try {
+      let entity = await this.purchaseRequestRepository.findOneBy({ id });
+      if (!entity) throw new NotFoundException();
+      await this.purchaseRequestRepository.update(
+        { id },
+        {
+          status: ModuleStatus.CANCELED,
+          reason: dto.reason,
+        },
+      );
+      entity = await this.purchaseRequestRepository.findOneBy({ id });
       return PurchaseRequestMapper.toDto(entity);
     } catch (error) {
       handleError(error);

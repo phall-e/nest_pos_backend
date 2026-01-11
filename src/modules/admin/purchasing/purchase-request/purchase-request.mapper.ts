@@ -15,6 +15,7 @@ export class PurchaseRequestMapper {
         dto.requestDate = entity.requestDate;
         dto.branchId = entity.branchId;
         dto.description = entity.description;
+        dto.reason = entity.reason;
         dto.attachments = entity.attachments ? [...entity.attachments] : [];
         dto.createdById = entity.createdById;
         dto.status = entity.status;

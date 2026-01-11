@@ -42,6 +42,12 @@ export class PurchaseRequestMigration1764984877757 implements MigrationInterface
                         isNullable: true,
                     },
                     {
+                        name: 'reason',
+                        type: 'varchar',
+                        length: '160',
+                        isNullable: true,
+                    },
+                    {
                         name: 'attachments',
                         type: 'jsonb',
                         isNullable: true,

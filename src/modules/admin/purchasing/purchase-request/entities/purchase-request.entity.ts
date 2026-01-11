@@ -54,6 +54,14 @@ export class PurchaseRequestEntity extends BaseEntity{
     description: string;
 
     @Column({
+        name: 'reason',
+        type: 'varchar',
+        length: '160',
+        nullable: true,
+    })
+    reason: string;
+
+    @Column({
         name: 'attachments',
         type: 'jsonb',
         nullable: true,

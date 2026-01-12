@@ -81,7 +81,7 @@ export class PurchaseReceiptService extends BasePaginationCrudService<PurchaseRe
         where.status = ModuleStatus.APPROVED
       }
 
-      const entities = await this.purchaseOrderRepository.find({
+      const entities = await this.purchaseReceiptRepository.find({
         where,
         select: {
           id: true,
@@ -109,7 +109,11 @@ export class PurchaseReceiptService extends BasePaginationCrudService<PurchaseRe
           approvedBy: true,
           createdBy: true,
           items: {
-            product: true,
+            product: {
+              category: true,
+              uom: true,
+            },
+            
           }
         }
       });

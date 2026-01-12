@@ -52,6 +52,10 @@ export class StockMapper {
         return entity;
     }
 
+    static toCreateEntities(dtos: CreateStockRequestDto[]): StockEntity[] {
+        return dtos.map(dto => this.toCreateEntity(dto))
+    }
+
     public static toUpdateEntity(entity: StockEntity, dto: UpdateStockRequestDto): StockEntity {
         entity.branchId = dto.branchId;
         entity.productId = dto.productId;

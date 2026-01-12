@@ -33,15 +33,32 @@ export class StockService extends BasePaginationCrudService<StockEntity, StockRe
     return StockMapper.toDto(entities);
   }
   
-  public async create(dto: CreateStockRequestDto): Promise<StockResponseDto> {
+  public async create(
+    dto: CreateStockRequestDto[]
+  ): Promise<StockResponseDto[]> {
+    const queryRunner = this.dataSource.createQueryRunner()
+
+    await queryRunner.connect()
+    await queryRunner.startTransaction()
+
     try {
-      let entity = StockMapper.toCreateEntity(dto);
-      entity = await this.stockRepository.save(entity);
-      return StockMapper.toDto(entity);
+      // ✅ Use QueryRunner manager
+      let entities = StockMapper.toCreateEntities(dto)
+      entities = await this.stockRepository.save(entities);
+    
+      await queryRunner.commitTransaction()
+
+      return await Promise.all(
+        entities.map(item => StockMapper.toDto(item))
+      ); 
     } catch (error) {
-      handleError(error);
+      await queryRunner.rollbackTransaction()
+      handleError(error)
+    } finally {
+      await queryRunner.release()
     }
   }
+
 
   public async findOne(id: number): Promise<StockResponseDto> {
     try {
@@ -55,6 +72,19 @@ export class StockService extends BasePaginationCrudService<StockEntity, StockRe
       });
       if (!entity) throw new NotFoundException();
       return StockMapper.toDto(entity);
+    } catch (error) {
+      handleError(error);
+    }
+  }
+
+  public async findInBranchAndIds(branchId: number): Promise<StockEntity[]> {
+    try {
+      const query = await this.stockRepository.createQueryBuilder('stock')
+        query.where('stock.branchId = :branchId', {
+          branchId,
+        })
+        const entities = await query.getMany();
+        return entities;
     } catch (error) {
       handleError(error);
     }

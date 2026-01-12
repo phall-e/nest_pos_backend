@@ -12,6 +12,7 @@ import { ApiBearerAuth, ApiForbiddenResponse, ApiResponse, ApiTags } from '@nest
 import { CurrentUser } from '@/modules/auth/decorators/current-user.decorator';
 import { UserEntity } from '../../system/user/entities/user.entity';
 import { SWAGGER_TOKEN_NAME } from '@/swagger/config';
+import { CreateStockBatchRequestDto } from './dto/create-stock-batch-request.dto';
 
 @ApiTags('Stock')
 @ApiBearerAuth(SWAGGER_TOKEN_NAME)
@@ -27,13 +28,15 @@ export class StockController {
   @ApiResponse({ status: 201, type: StockResponseDto, description: 'Stock is created successfully' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   public create(
-    @Body() dto: CreateStockRequestDto,
+    @Body() dto: CreateStockBatchRequestDto,
     @CurrentUser() user: UserEntity,
-  ): Promise<StockResponseDto> {
-    return this.stockService.create({
-      ...dto,
+  ): Promise<StockResponseDto[]> {
+     const payload = dto.items.map(item => ({
+      ...item,
       createdById: user.id,
-    });
+    }))
+
+    return this.stockService.create(payload);
   }
 
   @Get()
@@ -41,6 +44,14 @@ export class StockController {
   @ApiPaginatedResponse(StockResponseDto)
   public findAll(@Paginate() query: PaginateQuery): Promise<PaginatedResponse<StockEntity, StockResponseDto>> {
     return this.stockService.list(query);
+  }
+
+  @Get('branch-product/:branchId')
+  @ApiResponse({ status: 200, type: [StockEntity], description: 'Find stock by branch and product' })
+  public findInBranchAndIds(
+    @Param('branchId') branchId: number,
+  ): Promise<StockEntity[]> {
+    return this.stockService.findInBranchAndIds(branchId);
   }
 
   @Get(':id')

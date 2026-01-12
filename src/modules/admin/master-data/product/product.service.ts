@@ -9,6 +9,7 @@ import { Repository } from 'typeorm';
 import { ProductMapper } from './product.mapper';
 import { handleTransactionCodeGeneration } from '@/utils/transaction-code-generation.util';
 import { handleError } from '@/utils/handle-error.util';
+import { NotInProductRequestDto } from './dto/not-in-product-request.dto';
 
 @Injectable()
 export class ProductService extends BasePaginationCrudService<ProductEntity, ProductResponseDto>{
@@ -87,22 +88,38 @@ export class ProductService extends BasePaginationCrudService<ProductEntity, Pro
     }
   }
 
-  public async findNotIn(ids: number[]): Promise<ProductEntity[]> {
+  public async findNotIn(
+    dto: NotInProductRequestDto
+  ): Promise<ProductEntity[]> {
     try {
-      const query = this.productRepository
-        .createQueryBuilder('product')
+      const query = this.productRepository.createQueryBuilder('product')
+        .leftJoinAndSelect('product.category', 'category')
+        .leftJoinAndSelect('product.uom', 'uom')
 
-      // ✅ Handle empty array safely
-      if (ids?.length) {
-        query.where('product.id NOT IN (:...ids)', { ids })
+      if (dto.ids?.length) {
+        query.andWhere('product.id NOT IN (:...ids)', {
+          ids: dto.ids,
+        })
       }
 
-      const entities = await query.getMany();
-      return entities;
+      if (dto.categoryId) {
+        query.andWhere('product.categoryId = :categoryId', {
+          categoryId: dto.categoryId,
+        })
+      }
+
+      if (dto.uomId) {
+        query.andWhere('product.uomId = :uomId', {
+          uomId: dto.uomId,
+        })
+      }
+
+      return await query.getMany()
     } catch (error) {
       handleError(error)
     }
   }
+
 
 
   public async update(id: number, dto: UpdateProductRequestDto): Promise<ProductResponseDto> {

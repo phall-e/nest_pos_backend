@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, Put, Query } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { ApiBearerAuth, ApiForbiddenResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SWAGGER_TOKEN_NAME } from '@/swagger/config';
@@ -12,6 +12,7 @@ import { Paginate, type PaginateQuery } from 'nestjs-paginate';
 import { PaginatedResponse } from '@/common/paginations/paginated-response.type';
 import { ProductEntity } from './entities/product.entity';
 import { UpdateProductRequestDto } from './dto/update-product-request.dto';
+import { NotInProductRequestDto } from './dto/not-in-product-request.dto';
 
 @ApiTags('Products')
 @ApiBearerAuth(SWAGGER_TOKEN_NAME)
@@ -47,10 +48,10 @@ export class ProductController {
     return this.productService.nextCode();
   }
 
-  @Get('not-in/:ids')
+  @Get('not-in')
   @ApiResponse({ status: 200, type: [ProductEntity], description: 'Get products list not in ids' })
-  public findNotIn(@Param('ids') ids: number[]): Promise<ProductEntity[]> {
-    return this.productService.findNotIn(ids);
+  public findNotIn(@Query() dto: NotInProductRequestDto): Promise<ProductEntity[]> {
+    return this.productService.findNotIn(dto);
   }
 
 

@@ -38,6 +38,14 @@ export class UomEntity extends BaseEntity{
     nameKh: string;
 
     @Column({
+        name: 'quantity',
+        type: 'integer',
+        default: 1,
+        nullable: false,
+    })
+    quantity: number;
+
+    @Column({
         name: 'created_by_id',
         type: 'integer',
         nullable: true,

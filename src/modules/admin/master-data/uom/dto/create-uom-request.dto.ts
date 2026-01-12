@@ -17,5 +17,9 @@ export class CreateUomRequestDto {
     @IsString()
     nameKh: string;
 
+    @ApiProperty()
+    @IsNotEmpty()
+    quantity: number;
+
     createdById: number;
 }

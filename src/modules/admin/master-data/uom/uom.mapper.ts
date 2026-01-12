@@ -11,6 +11,7 @@ export class UomMapper {
         dto.code = entity.code;
         dto.nameEn = entity.nameEn;
         dto.nameKh = entity.nameKh;
+        dto.quantity = entity.quantity;
         dto.createdById = entity.createdById;
         dto.createdAt = entity.createdAt;
         dto.updatedAt = entity.updatedAt;
@@ -29,6 +30,7 @@ export class UomMapper {
         entity.code = dto.code;
         entity.nameEn = dto.nameEn;
         entity.nameKh = dto.nameKh;
+        entity.quantity = dto.quantity;
         entity.createdById = dto.createdById;
 
         return entity;
@@ -38,6 +40,7 @@ export class UomMapper {
         entity.code = dto.code;
         entity.nameEn = dto.nameEn;
         entity.nameKh = dto.nameKh;
+        entity.quantity = dto.quantity;
         entity.updatedAt = new Date();
 
         return entity;

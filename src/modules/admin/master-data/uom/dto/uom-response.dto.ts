@@ -15,6 +15,9 @@ export class UomResponseDto {
     nameKh: string;
 
     @ApiProperty()
+    quantity: number;
+
+    @ApiProperty()
     createdById: number;
 
     @ApiProperty()

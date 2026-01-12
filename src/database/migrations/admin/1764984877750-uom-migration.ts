@@ -37,6 +37,12 @@ export class UomMigration1764984877750 implements MigrationInterface {
                         isNullable: false,
                     },
                     {
+                        name: 'quantity',
+                        type: 'integer',
+                        default: 1,
+                        isNullable: false,
+                    },
+                    {
                         name: 'created_by_id',
                         type: 'integer',
                         isNullable: true,

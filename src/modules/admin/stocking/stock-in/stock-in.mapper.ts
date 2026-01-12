@@ -1,5 +1,6 @@
 import { BranchMapper } from "../../master-data/branch/branch.mapper";
 import { ProductMapper } from "../../master-data/product/product.mapper";
+import { PurchaseReceiptMapper } from "../../purchasing/purchase-receipt/purchase-receipt.mapper";
 import { UserMapper } from "../../system/user/user.mapper";
 import { CreateStockInRequestDto } from "./dto/create-stock-in-request.dto";
 import { StockInResponseDto } from "./dto/stock-in-response.dto";
@@ -11,6 +12,8 @@ export class StockInMapper {
         const dto = new StockInResponseDto();
 
         dto.id = entity.id;
+        dto.stockInDate = entity.stockInDate;
+        dto.purchaseReceiptId = entity.purchaseReceiptId;
         dto.branchId = entity.branchId;
         dto.productId = entity.productId;
         dto.quantity = entity.quantity ? parseFloat(entity.quantity as any) : null;
@@ -19,6 +22,10 @@ export class StockInMapper {
         dto.createdAt = entity.createdAt;
         dto.updatedAt = entity.updatedAt;
         dto.deletedAt = entity.deletedAt;
+
+        if (entity.purchaseReceipt) {
+            dto.purchaseReceipt = await PurchaseReceiptMapper.toDto(entity.purchaseReceipt);
+        }
 
         if (entity.branch) { 
             dto.branch = await BranchMapper.toDto(entity.branch);
@@ -40,8 +47,9 @@ export class StockInMapper {
         return dto.items.map(item => {
             const entity = new StockInEntity();
 
-            entity.purchaseReceiptId = item.purchaseReceiptId;
-            entity.branchId = item.branchId;
+            entity.stockInDate = dto.stockInDate;
+            entity.purchaseReceiptId = dto.purchaseReceiptId;
+            entity.branchId = dto.branchId;
             entity.productId = item.productId;
             entity.quantity = item.quantity;
             entity.note = item.note;
@@ -52,6 +60,7 @@ export class StockInMapper {
     }
 
     public static toUpdateEntity(entity: StockInEntity, dto: UpdateStockInRequestDto): StockInEntity {
+        entity.stockInDate = dto.stockInDate;
         entity.purchaseReceiptId = dto.purchaseReceiptId;
         entity.branchId = dto.branchId;
         entity.productId = dto.productId;

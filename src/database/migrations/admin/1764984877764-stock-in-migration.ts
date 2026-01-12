@@ -18,6 +18,11 @@ export class StockInMigration1764984877764 implements MigrationInterface {
                         isNullable: false,
                     },
                     {
+                        name: 'stock_in_date',
+                        type: 'date',
+                        isNullable: false,
+                    },
+                    {
                         name: 'purchase_receipt_id',
                         type: 'integer',
                         isNullable: false,

@@ -1,16 +1,19 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsNumber, IsOptional, Min } from "class-validator";
+import { IsDateString, IsNotEmpty, IsNumber, IsOptional, Min } from "class-validator";
 
 export class CreateStockInItemRequestDto {
     @ApiProperty()
-    @IsNotEmpty()
-    @IsNumber()
-    purchaseReceiptId: number;
+    @IsOptional()
+    @IsDateString()
+    stockInDate?: Date;
 
     @ApiProperty()
-    @IsNotEmpty()
-    @IsNumber()
-    branchId: number;
+    @IsOptional()
+    purchaseReceiptId?: number;
+
+    @ApiProperty()
+    @IsOptional()
+    branchId?: number;
 
     @ApiProperty()
     @IsNotEmpty()
@@ -19,7 +22,6 @@ export class CreateStockInItemRequestDto {
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsNumber()
     @Min(0.1)
     quantity: number;
 

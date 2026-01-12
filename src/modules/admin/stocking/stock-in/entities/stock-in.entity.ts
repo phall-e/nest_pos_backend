@@ -29,6 +29,13 @@ export class StockInEntity extends BaseEntity {
     purchaseReceipt: PurchaseReceiptEntity;
 
     @Column({
+        name: 'stock_in_date',
+        type: 'date',
+        nullable: false,
+    })
+    stockInDate: Date;
+
+    @Column({
         name: 'branch_id',
         type: 'integer',
         nullable: false,

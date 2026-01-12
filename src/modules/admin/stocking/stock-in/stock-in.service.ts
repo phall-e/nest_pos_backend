@@ -10,6 +10,8 @@ import { StockInMapper } from './stock-in.mapper';
 import { handleError } from '@/utils/handle-error.util';
 import { StockService } from '../stock/stock.service';
 import { StockIncrementRequestDto } from '../stock/dto/stock-increment-request.dto';
+import { PurchaseReceiptEntity } from '../../purchasing/purchase-receipt/entities/purchase-receipt.entity';
+import { ModuleStatus } from '@/common/enums/status.enum';
 
 @Injectable()
 export class StockInService extends BasePaginationCrudService<StockInEntity, StockInResponseDto>{
@@ -17,11 +19,13 @@ export class StockInService extends BasePaginationCrudService<StockInEntity, Sto
   protected SEARCHABLE_COLUMNS = ['purchaseReceipt.code', 'branch.nameEn', 'branch.nameKh', 'product.nameEn', 'product.nameKh', 'product.code', 'createdAt'];
   protected FILTER_COLUMNS = ['purchaseReceipt.code', 'branch.nameEn', 'branch.nameKh', 'product.nameEn', 'product.nameKh', 'product.code', 'createdAt'];
   protected SORTABLE_COLUMNS = ['purchaseReceipt.code', 'branch.nameEn', 'branch.nameKh', 'product.nameEn', 'product.nameKh', 'product.code'];
-  protected RELATIONSIP_FIELDS = ['purchaseReceipt', 'branch', 'product', 'createdBy'];
+  protected RELATIONSIP_FIELDS = ['purchaseReceipt.supplier', 'branch', 'product', 'createdBy'];
 
   constructor(
     @InjectRepository(StockInEntity)
     private stockInRepository: Repository<StockInEntity>,
+    @InjectRepository(PurchaseReceiptEntity)
+    private purchaseReceiptRepository: Repository<PurchaseReceiptEntity>,
     private stockService: StockService,
     private dataSource: DataSource,
   ){
@@ -37,6 +41,7 @@ export class StockInService extends BasePaginationCrudService<StockInEntity, Sto
   }
 
   public async create(dto: CreateStockInRequestDto): Promise<StockInResponseDto[]> {
+  
     const queryRunner = this.dataSource.createQueryRunner();
 
     await queryRunner.connect();
@@ -50,6 +55,10 @@ export class StockInService extends BasePaginationCrudService<StockInEntity, Sto
         productIds: entities.map(e => e.productId),
         quantities: entities.map(e => e.quantity),
       }
+      await this.purchaseReceiptRepository.update(
+        { id: dto.purchaseReceiptId },
+        { status: ModuleStatus.COMPLETED },
+      )
       await this.stockService.stockIncrement(incrementDto, 'stockIn');
       await queryRunner.commitTransaction();
       return await Promise.all(
@@ -70,7 +79,10 @@ export class StockInService extends BasePaginationCrudService<StockInEntity, Sto
         relations: {
           purchaseReceipt: true,
           branch: true,
-          product: true,
+          product: {
+            category: true,
+            uom: true,
+          },
           createdBy: true,
         },
       });

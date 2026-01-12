@@ -9,6 +9,9 @@ export class StockInResponseDto {
     id: number;
 
     @ApiProperty()
+    stockInDate: Date;
+
+    @ApiProperty()
     purchaseReceiptId: number;
 
     @ApiProperty()

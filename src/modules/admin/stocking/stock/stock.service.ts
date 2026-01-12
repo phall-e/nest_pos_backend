@@ -113,43 +113,55 @@ export class StockService extends BasePaginationCrudService<StockEntity, StockRe
     }
   }
 
-  public async stockIncrement(dto: StockIncrementRequestDto, key: keyof StockEntity): Promise<void> {
+  public async stockIncrement(dto: StockIncrementRequestDto, key: keyof Pick<
+    StockEntity,
+    'stockIn' | 'stockAdjustment' | 'stockTransfer' | 'stockOut'
+    >,
+  ): Promise<void> {
     const queryRunner = this.dataSource.createQueryRunner();
 
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
-    try {
-      // Validate column name
-      const allowKeys: (keyof StockEntity)[] = [
-        'stockIn',
-        'stockAdjustment',
-        'stockTransfer',
-        'stockOut',
-      ];
+    const STOCK_COLUMN_MAP: Record<
+      keyof Pick<StockEntity, 'stockIn' | 'stockAdjustment' | 'stockTransfer' | 'stockOut'>,
+      string
+    > = {
+      stockIn: 'stock_in',
+      stockAdjustment: 'stock_adjustment',
+      stockTransfer: 'stock_transfer',
+      stockOut: 'stock_out',
+    }
 
-      for (let i = 0; i < dto.branchIds.length; i++) {
-        await queryRunner.manager
-        .createQueryBuilder()
-        .update(StockEntity)
-        .set({
-          [key]: () => `"${key}" + :qty`,
-        })
-        .andWhere('product_id = :productId', {
-          productId: dto.productIds[i],
-        })
-        .setParameters({
-          qty: dto.quantities[i],
-        })
-        .execute();
+     try {
+      const column = STOCK_COLUMN_MAP[key]
+
+      if (!column) {
+        throw new Error(`Invalid stock column: ${key}`)
       }
 
-      await queryRunner.commitTransaction();
+      for (let i = 0; i < dto.productIds.length; i++) {
+        await queryRunner.manager
+          .createQueryBuilder()
+          .update(StockEntity)
+          .set({
+            [key]: () => `"${column}" + :qty`,
+          })
+          .where('product_id = :productId', {
+            productId: dto.productIds[i],
+          })
+          .setParameters({
+            qty: dto.quantities[i],
+          })
+          .execute()
+      }
+
+      await queryRunner.commitTransaction()
     } catch (error) {
-      await queryRunner.rollbackTransaction();
-      handleError(error);
+      await queryRunner.rollbackTransaction()
+      handleError(error)
     } finally {
-      await queryRunner.release();
+      await queryRunner.release()
     }
   }
 }

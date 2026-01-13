@@ -10,6 +10,8 @@ import { ApiPaginatedResponse } from '@/common/paginations/api-paginated-respons
 import { Paginate, type PaginateQuery } from 'nestjs-paginate';
 import { PaginatedResponse } from '@/common/paginations/paginated-response.type';
 import { UserEntity } from './entities/user.entity';
+import { ChangePasswordRequestDto } from './dto/change-password-request.dto';
+import { CurrentUser } from '@/modules/auth/decorators/current-user.decorator';
 
 @ApiTags('Users')
 @ApiBearerAuth(SWAGGER_TOKEN_NAME)
@@ -27,6 +29,16 @@ export class UserController {
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   public create(@Body() dto: CreateUserRequestDto): Promise<UserResponseDto> {
     return this.userService.create(dto);
+  }
+
+  @Post('change-password')
+  @ApiResponse({ status: 200, type: UserResponseDto, description: 'Password changed successfully' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  public changePassword(
+    @Body() dto: ChangePasswordRequestDto,
+    @CurrentUser() user: UserEntity,
+  ): Promise<UserResponseDto> {
+    return this.userService.changePassword(user.id, dto);
   }
 
   @Get()

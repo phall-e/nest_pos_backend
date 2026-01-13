@@ -62,10 +62,14 @@ export class UserMapper {
         entity.username = dto.username;
         entity.isAdmin = dto.isAdmin;
         entity.isActive = dto.isActive;
-        entity.roles = Promise.resolve(dto.roles.map((id) => new RoleEntity(({ id }))));
-        // entity.branches = Promise.resolve(
-        //     dto.branch.map((id) => new BranchEntity({ id }))
-        // );
+        if (dto.roles && dto.roles.length > 0) {
+            entity.roles = Promise.resolve(dto.roles.map((id) => new RoleEntity(({ id }))));
+        }
+        if (dto.branch && dto.branch.length > 0) {
+                entity.branches = Promise.resolve(
+                dto.branch.map((id) => new BranchEntity({ id }))
+            );
+        }
 
         return entity;
     }

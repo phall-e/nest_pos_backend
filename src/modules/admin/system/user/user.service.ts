@@ -9,6 +9,8 @@ import { UserMapper } from './user.mapper';
 import { BasePaginationCrudService } from '@/common/services/base-pagination-crud.service';
 import * as bcrypt from 'bcrypt';
 import { PasswordHash } from '@/utils/password-hash.util';
+import { ChangePasswordRequestDto } from './dto/change-password-request.dto';
+import { handleError } from '@/utils/handle-error.util';
 
 @Injectable()
 export class UserService extends BasePaginationCrudService<UserEntity, UserResponseDto>{
@@ -112,6 +114,26 @@ export class UserService extends BasePaginationCrudService<UserEntity, UserRespo
       return UserMapper.toDtoWithRelationship(entity);
     } catch (error) {
       throw new BadRequestException(error?.message);
+    }
+  }
+
+  public async changePassword(userId: number, dto: ChangePasswordRequestDto): Promise<UserResponseDto> {
+    try {
+      const entity = await this.userRepository.findOne({
+        where: { id: userId },
+      });
+      if (!entity) throw new NotFoundException();
+      const isMatched = await PasswordHash.verify(dto.oldPassword, entity.password);
+      if (!isMatched) throw new BadRequestException('Invalid credential');
+      const hashPassword = await PasswordHash.hash(dto.newPassword);
+      await this.userRepository.update({
+        id: entity.id,
+      },{
+        password: hashPassword,
+      });
+      return UserMapper.toDto(entity);
+    } catch (error) {
+      handleError(error);
     }
   }
 }

@@ -15,10 +15,10 @@ import { handleTransactionCodeGeneration } from '@/utils/transaction-code-genera
 
 @Injectable()
 export class StockTransferService extends BasePaginationCrudService<StockTransferEntity, StockTransferResponseDto>{
-  protected SEARCHABLE_COLUMNS = ['code', 'branch.nameEn', 'branch.nameKh', 'description', 'createdBy.username'];
-  protected SORTABLE_COLUMNS = ['code', 'branch.nameEn', 'branch.nameKh', 'description', 'totalQuantity', 'createdAt', 'createdBy.username'];
-  protected FILTER_COLUMNS = ['code', 'branch.nameEn', 'branch.nameKh', 'description', 'totalQuantity', 'createdAt', 'createdBy.username'];
-  protected RELATIONSIP_FIELDS = ['branch', 'createdBy'];
+  protected SEARCHABLE_COLUMNS = ['code', 'fromBranch.nameEn', 'fromBranch.nameKh',  'toBranch.nameEn', 'toBranch.nameKh', 'description', 'createdBy.username'];
+  protected SORTABLE_COLUMNS = ['code', 'fromBranch.nameEn', 'fromBranch.nameKh',  'toBranch.nameEn', 'toBranch.nameKh', 'description', 'totalQuantity', 'createdAt', 'createdBy.username'];
+  protected FILTER_COLUMNS = ['code', 'fromBranch.nameEn', 'fromBranch.nameKh',  'toBranch.nameEn', 'toBranch.nameKh', 'description', 'totalQuantity', 'createdAt', 'createdBy.username'];
+  protected RELATIONSIP_FIELDS = ['fromBranch', 'toBranch', 'createdBy'];
 
   constructor(
     @InjectRepository(StockTransferEntity)

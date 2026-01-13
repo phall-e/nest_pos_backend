@@ -39,7 +39,6 @@ export class CreateStockTransferRequestDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    @Length(160)
     description: string;
 
     createdById: number;

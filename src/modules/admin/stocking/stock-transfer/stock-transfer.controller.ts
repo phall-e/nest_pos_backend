@@ -43,6 +43,12 @@ export class StockTransferController {
     return this.stockTransferService.list(query);
   }
 
+  @Get('next-code')
+  @ApiResponse({ status: 200, type: String, description: 'Get next code for stock transfer' })
+  public nextCode(): Promise<string> {
+    return this.stockTransferService.nextCode();
+  }
+
   @Get(':id')
   @Permissions('read-stock-transfer')
   @ApiResponse({ status: 200, type: StockTransferResponseDto, description: 'Find one of stock transfer'})

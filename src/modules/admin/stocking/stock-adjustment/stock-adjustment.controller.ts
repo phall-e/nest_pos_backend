@@ -44,6 +44,12 @@ export class StockAdjustmentController {
     return this.stockAdjustmentService.list(query);
   }
 
+  @Get('next-code')
+  @ApiResponse({ status: 200, type: String, description: 'Get next code for stock adjustment' })
+  public nextCode(): Promise<string> {
+    return this.stockAdjustmentService.nextCode();
+  }
+
   @Get(':id')
   @Permissions('read-stock-adjustment')
   @ApiResponse({ status: 200, type: StockAdjustmentResponseDto, description: 'Find one of stock adjustment' })

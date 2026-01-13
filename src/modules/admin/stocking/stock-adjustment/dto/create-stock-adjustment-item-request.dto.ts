@@ -13,7 +13,6 @@ export class CreateStockAdjustmentItemRequestDto {
     
     @ApiProperty()
     @IsNotEmpty()
-    @IsNumber()
     quantity: number;
 
     @ApiProperty()

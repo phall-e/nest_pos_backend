@@ -54,6 +54,15 @@ export class StockController {
     return this.stockService.findInBranchAndIds(branchId);
   }
 
+  @Get('branch/:branchId/product/:productId')
+  @ApiResponse({ status: 200, type: [StockResponseDto], description: 'Find stock by branch and product' })
+  public findByBranchAndId(
+    @Param('branchId') branchId: number,
+    @Param('productId') productId: number,
+  ): Promise<StockResponseDto> {
+    return this.stockService.findByBranchAndId(branchId, productId);
+  }
+
   @Get(':id')
   @Permissions('read-stock')
   @ApiResponse({ status: 200, type: StockResponseDto, description: 'Find one of stock' })

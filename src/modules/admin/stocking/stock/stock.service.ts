@@ -90,6 +90,21 @@ export class StockService extends BasePaginationCrudService<StockEntity, StockRe
     }
   }
 
+  public async findByBranchAndId(branchId: number, productId: number): Promise<StockResponseDto> {
+    try {
+      const entity = await this.stockRepository.findOne({
+        where: {
+          branchId: branchId,
+          productId: productId,
+        },
+      });
+      if (!entity) throw new NotFoundException();
+      return StockMapper.toDto(entity);
+    } catch (error) {
+      handleError(error);
+    }
+  }
+
   public async update(id: number, dto: UpdateStockRequestDto): Promise<StockResponseDto> {
     try {
       let entity = await this.stockRepository.findOneBy({ id });

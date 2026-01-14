@@ -128,27 +128,26 @@ export class StockService extends BasePaginationCrudService<StockEntity, StockRe
     }
   }
 
-  public async stockIncrement(dto: StockIncrementRequestDto, key: keyof Pick<
-    StockEntity,
-    'stockIn' | 'stockAdjustment' | 'stockTransfer' | 'stockOut'
+  public async stockIncrement(
+    dto: StockIncrementRequestDto,
+    key: keyof Pick<
+      StockEntity,
+      'stockIn' | 'stockAdjustment' | 'stockTransfer' | 'stockOut'
     >,
   ): Promise<void> {
-    const queryRunner = this.dataSource.createQueryRunner();
 
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
+    const queryRunner = this.dataSource.createQueryRunner()
+    await queryRunner.connect()
+    await queryRunner.startTransaction()
 
-    const STOCK_COLUMN_MAP: Record<
-      keyof Pick<StockEntity, 'stockIn' | 'stockAdjustment' | 'stockTransfer' | 'stockOut'>,
-      string
-    > = {
+    const STOCK_COLUMN_MAP = {
       stockIn: 'stock_in',
       stockAdjustment: 'stock_adjustment',
       stockTransfer: 'stock_transfer',
       stockOut: 'stock_out',
-    }
+    } as const
 
-     try {
+    try {
       const column = STOCK_COLUMN_MAP[key]
 
       if (!column) {
@@ -160,13 +159,17 @@ export class StockService extends BasePaginationCrudService<StockEntity, StockRe
           .createQueryBuilder()
           .update(StockEntity)
           .set({
+            // ✅ entity property on LEFT
             [key]: () => `"${column}" + :qty`,
           })
           .where('product_id = :productId', {
             productId: dto.productIds[i],
           })
+          .andWhere('branch_id = :branchId', {
+            branchId: dto.branchIds[i],
+          })
           .setParameters({
-            qty: dto.quantities[i],
+            qty: Number(dto.quantities[i]),
           })
           .execute()
       }
@@ -179,4 +182,5 @@ export class StockService extends BasePaginationCrudService<StockEntity, StockRe
       await queryRunner.release()
     }
   }
+
 }

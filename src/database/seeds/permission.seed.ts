@@ -275,4 +275,21 @@ export const permissions = [
         name: 'delete-stock-transfer',
         description: 'Delete stock-transfer',
     },
+     // Customer type
+    {
+        name: 'read-customer-type',
+        description: 'Read customer-type',
+    },
+    {
+        name: 'create-customer-type',
+        description: 'Create customer-type',
+    },
+    {
+        name: 'update-customer-type',
+        description: 'Update customer-type',
+    },
+    {
+        name: 'delete-customer-type',
+        description: 'Delete customer-type',
+    },
 ]

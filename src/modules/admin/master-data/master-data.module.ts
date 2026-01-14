@@ -5,8 +5,17 @@ import { ProductModule } from './product/product.module';
 import { BranchModule } from './branch/branch.module';
 import { ProductsByBranchesModule } from './products-by-branches/products-by-branches.module';
 import { SupplierModule } from './supplier/supplier.module';
+import { CustomerTypeModule } from './customer-type/customer-type.module';
 
 @Module({
-  imports: [CategoryModule, UomModule, ProductModule, BranchModule, ProductsByBranchesModule, SupplierModule]
+  imports: [
+    CategoryModule, 
+    UomModule, 
+    ProductModule, 
+    BranchModule, 
+    ProductsByBranchesModule, 
+    SupplierModule,
+    CustomerTypeModule,
+  ]
 })
 export class MasterDataModule {}

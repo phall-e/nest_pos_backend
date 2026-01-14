@@ -15,7 +15,7 @@ export class StockService extends BasePaginationCrudService<StockEntity, StockRe
   protected SORTABLE_COLUMNS = ['branch.nameEn', 'branch.nameKh', 'product.nameEn', 'product.nameKh', 'createdById'];
   protected FILTER_COLUMNS = ['branch.nameEn', 'branch.nameKh', 'product.nameEn', 'product.nameKh', 'createdBy.username'];
   protected SEARCHABLE_COLUMNS = ['branch.nameEn', 'branch.nameKh', 'product.nameEn', 'product.nameKh', 'createdById'];
-  protected RELATIONSIP_FIELDS = ['branch', 'product', 'createdBy'];
+  protected RELATIONSIP_FIELDS = ['branch', 'product.category', 'product.uom', 'createdBy'];
 
   constructor(
     @InjectRepository(StockEntity)

@@ -50,16 +50,16 @@ export class StockTransferService extends BasePaginationCrudService<StockTransfe
       entity = await this.stockTrasnferRepository.save(entity);
 
       const fromBranchIncrementDto: StockIncrementRequestDto = {
-        branchIds: entity.items.map(_e => entity.fromBranchId),
+        branchIds: entity.items.map(_e => dto.fromBranchId),
         productIds: entity.items.map(e => e.productId),
-        quantities: entity.items.map(e => e.quantity),
+        quantities: entity.items.map(e => -Math.abs(Number(e.quantity))),
       };
       await this.stockService.stockIncrement(fromBranchIncrementDto, 'stockTransfer');
 
       const toBranchIncrementDto: StockIncrementRequestDto = {
         branchIds: entity.items.map(_e => entity.toBranchId),
         productIds: entity.items.map(e => e.productId),
-        quantities: entity.items.map(e => - e.quantity),
+        quantities: entity.items.map(e => Number(e.quantity)),
       };
       await this.stockService.stockIncrement(toBranchIncrementDto, 'stockTransfer');
 

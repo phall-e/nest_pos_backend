@@ -6,6 +6,7 @@ import { BranchModule } from './branch/branch.module';
 import { ProductsByBranchesModule } from './products-by-branches/products-by-branches.module';
 import { SupplierModule } from './supplier/supplier.module';
 import { CustomerTypeModule } from './customer-type/customer-type.module';
+import { CustomerModule } from './customer/customer.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { CustomerTypeModule } from './customer-type/customer-type.module';
     ProductsByBranchesModule, 
     SupplierModule,
     CustomerTypeModule,
+    CustomerModule
   ]
 })
 export class MasterDataModule {}

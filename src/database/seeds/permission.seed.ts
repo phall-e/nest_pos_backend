@@ -132,6 +132,23 @@ export const permissions = [
         name: 'delete-products-by-branches',
         description: 'Delete products by branches',
     },
+    // Supplier
+    {
+        name: 'read-supplier',
+        description: 'Read supplier',
+    },
+    {
+        name: 'create-supplier',
+        description: 'Create supplier',
+    },
+    {
+        name: 'update-supplier',
+        description: 'Update supplier',
+    },
+    {
+        name: 'delete-supplier',
+        description: 'Delete supplier',
+    },
     // Purchase request
     {
         name: 'read-purchase-request',
@@ -291,5 +308,22 @@ export const permissions = [
     {
         name: 'delete-customer-type',
         description: 'Delete customer-type',
+    },
+     // Customer
+    {
+        name: 'read-customer',
+        description: 'Read customer',
+    },
+    {
+        name: 'create-customer',
+        description: 'Create customer',
+    },
+    {
+        name: 'update-customer',
+        description: 'Update customer',
+    },
+    {
+        name: 'delete-customer',
+        description: 'Delete customer',
     },
 ]

@@ -1,5 +1,5 @@
 import { BadRequestException } from "@nestjs/common";
-import { paginate, PaginateConfig, Paginated, PaginateQuery } from "nestjs-paginate";
+import { FilterOperator, paginate, PaginateConfig, Paginated, PaginateQuery } from "nestjs-paginate";
 import { ObjectLiteral, Repository } from "typeorm";
 import { PaginatedResponse } from "../paginations/paginated-response.type";
 
@@ -14,6 +14,13 @@ export abstract class BasePaginationCrudService<
     protected SEARCHABLE_COLUMNS: string[] = [];
     protected RELATIONSIP_FIELDS: string[] = [];
 
+    protected buildFilterableColumns(): Record<string, FilterOperator[]> {
+        return this.FILTER_COLUMNS.reduce((acc, column) => {
+            acc[column] = [FilterOperator.EQ]
+            return acc
+        }, {} as Record<string, FilterOperator[]>)
+    }
+
     protected abstract getMapperReponseEntityField(entities: T): Promise<K>;
 
     public async list(query: PaginateQuery): Promise<PaginatedResponse<T, K>> {
@@ -26,6 +33,7 @@ export abstract class BasePaginationCrudService<
                     searchableColumns: this.SEARCHABLE_COLUMNS as any,
                     defaultLimit: 10,
                     defaultSortBy: [['id', 'DESC']] as PaginateConfig<T>['defaultSortBy'],
+                    filterableColumns: this.buildFilterableColumns() as any,
                     relations: this.RELATIONSIP_FIELDS as any,
                 }
             );

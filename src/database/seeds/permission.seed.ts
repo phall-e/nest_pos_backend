@@ -326,4 +326,21 @@ export const permissions = [
         name: 'delete-customer',
         description: 'Delete customer',
     },
+     // Sale
+    {
+        name: 'read-sale',
+        description: 'Read sale',
+    },
+    {
+        name: 'create-sale',
+        description: 'Create sale',
+    },
+    {
+        name: 'update-sale',
+        description: 'Update sale',
+    },
+    {
+        name: 'delete-sale',
+        description: 'Delete sale',
+    },
 ]

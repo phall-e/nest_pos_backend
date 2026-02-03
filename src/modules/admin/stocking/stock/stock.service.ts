@@ -13,8 +13,8 @@ import { StockIncrementRequestDto } from './dto/stock-increment-request.dto';
 @Injectable()
 export class StockService extends BasePaginationCrudService<StockEntity, StockResponseDto>{
   protected SORTABLE_COLUMNS = ['branch.nameEn', 'branch.nameKh', 'product.nameEn', 'product.nameKh', 'createdById'];
-  protected FILTER_COLUMNS = ['branch.nameEn', 'branch.nameKh', 'product.nameEn', 'product.nameKh', 'createdBy.username'];
-  protected SEARCHABLE_COLUMNS = ['branch.nameEn', 'branch.nameKh', 'product.nameEn', 'product.nameKh', 'createdById'];
+  protected FILTER_COLUMNS = ['branchId', 'productId', 'createdById', 'product.categoryId'];
+  protected SEARCHABLE_COLUMNS = ['branch.nameEn', 'branch.nameKh', 'product.nameEn', 'product.nameKh', 'product.code', 'createdById'];
   protected RELATIONSIP_FIELDS = ['branch', 'product.category', 'product.uom', 'createdBy'];
 
   constructor(

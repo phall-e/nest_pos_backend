@@ -4,4 +4,5 @@ export enum ModuleStatus {
     PROCESSING = 'PROCESSING',
     COMPLETED = 'COMPLETED',
     CANCELED = 'CANCELED',
+    PAID = 'PAID',
 }

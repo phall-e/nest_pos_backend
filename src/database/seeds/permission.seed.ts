@@ -343,4 +343,21 @@ export const permissions = [
         name: 'delete-sale',
         description: 'Delete sale',
     },
+     // Sale payment receipt
+    {
+        name: 'read-sale-payment-receipt',
+        description: 'Read sale payment receipt',
+    },
+    {
+        name: 'create-sale-payment-receipt',
+        description: 'Create sale payment receipt',
+    },
+    {
+        name: 'update-sale-payment-receipt',
+        description: 'Update sale payment receipt',
+    },
+    {
+        name: 'delete-sale-payment-receipt',
+        description: 'Delete sale payment receipt',
+    },
 ]

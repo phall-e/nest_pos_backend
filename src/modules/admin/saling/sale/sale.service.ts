@@ -70,12 +70,21 @@ export class SaleService extends BasePaginationCrudService<SaleEntity, SaleRespo
     }
   }
 
-  public async findAllForSelection(): Promise<{ id: number; code: string }[]> {
+  public async findAllForSelection(branchId: number, isAll: boolean): Promise<{ id: number; code: string }[]> {
     try {
+      let wheres = null;
+      if (isAll === false) {
+        wheres = {
+          branchId: branchId,
+        } 
+      } else {
+        wheres = {
+          status: Not(ModuleStatus.PAID),
+          branchId: branchId,
+        }
+      }
       const entities = await this.saleRepository.find({
-        where: {
-          status: Not(ModuleStatus.COMPLETED),
-        },
+        where: wheres,
         select: {
           id: true,
           code: true,
@@ -106,6 +115,9 @@ export class SaleService extends BasePaginationCrudService<SaleEntity, SaleRespo
           items: {
             product: true,
           },
+          salePaymentReceipts: {
+            receiptBy: true,
+          }
         }
       });
       if (!entity) throw new NotFoundException();

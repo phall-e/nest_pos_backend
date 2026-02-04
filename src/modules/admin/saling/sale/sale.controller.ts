@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, Put, ParseBoolPipe } from '@nestjs/common';
 import { SaleService } from './sale.service';
 import { CreateSaleRequestDto } from './dto/create-sale-request.dto';
 import { UpdateSaleRequestDto } from './dto/update-sale-request.dto';
@@ -49,7 +49,7 @@ export class SaleController {
     return this.saleService.nextCode();
   }
 
-  @Get('select-options')
+  @Get('select-options/:branchId/:isAll')
   @ApiResponse({ 
     status: 200,
     schema: {
@@ -64,8 +64,11 @@ export class SaleController {
   },
     description: 'Selection for sale' 
   })
-  public findAllForSelection(): Promise<{ id: number; code: string }[]> {
-    return this.saleService.findAllForSelection();
+  public findAllForSelection(
+    @Param('branchId', ParseIntPipe) branchId: number,
+    @Param('isAll') isAll: boolean,
+  ): Promise<{ id: number; code: string }[]> {
+    return this.saleService.findAllForSelection(branchId, isAll);
   }
 
   @Get(':id')

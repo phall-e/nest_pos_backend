@@ -1,6 +1,7 @@
 import { BranchMapper } from "../../master-data/branch/branch.mapper";
 import { CustomerMapper } from "../../master-data/customer/customer.mapper";
 import { UserMapper } from "../../system/user/user.mapper";
+import { SalePaymentReceiptMapper } from "../sale-payment-receipt/sale-payment-receipt.mapper";
 import { CreateSaleRequestDto } from "./dto/create-sale-request.dto";
 import { SaleResponseDto } from "./dto/sale-response.dto";
 import { UpdateSaleRequestDto } from "./dto/update-sale-request.dto";
@@ -50,6 +51,12 @@ export class SaleMapper {
         if (entity.items && entity.items.length > 0) {
             dto.items = await Promise.all(
                 entity.items.map((item) => SaleItemMapper.toDto(item)),
+            );
+        }
+
+        if (entity.salePaymentReceipts && entity.salePaymentReceipts.length > 0) {
+            dto.salePaymentReceipts = await Promise.all(
+                entity.salePaymentReceipts.map((item) => SalePaymentReceiptMapper.toDto(item)),
             );
         }
 

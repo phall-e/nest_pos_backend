@@ -6,6 +6,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColum
 import { SaleAttachment } from "../dto/attachement.dto";
 import { SaleItemEntity } from "./sale-item.entity";
 import { BranchEntity } from "@/modules/admin/master-data/branch/entities/branch.entity";
+import { SalePaymentReceiptEntity } from "../../sale-payment-receipt/entities/sale-payment-receipt.entity";
 
 @Entity({
     schema: 'admin',
@@ -147,6 +148,9 @@ export class SaleEntity extends BaseEntity {
 
     @OneToMany(() => SaleItemEntity, (item) => item.sale, { cascade: true })
     items: SaleItemEntity[];
+
+    @OneToMany(() => SalePaymentReceiptEntity, (item) => item.sale, { cascade: true })
+    salePaymentReceipts: SalePaymentReceiptEntity[];
 
     constructor(partial?: Partial<SaleEntity>) {
         super();

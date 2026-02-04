@@ -4,6 +4,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { SaleAttachment } from "./attachement.dto";
 import { SaleItemResponseDto } from "./sale-item-response.dto";
 import { BranchResponseDto } from "@/modules/admin/master-data/branch/dto/branch-response.dto";
+import { SalePaymentReceiptResponseDto } from "../../sale-payment-receipt/dto/sale-payment-receipt-response.dto";
 
 export class SaleResponseDto {
     @ApiProperty()
@@ -71,4 +72,7 @@ export class SaleResponseDto {
 
     @ApiProperty()
     items: SaleItemResponseDto[];
+
+    @ApiProperty()
+    salePaymentReceipts: SalePaymentReceiptResponseDto[];
 }

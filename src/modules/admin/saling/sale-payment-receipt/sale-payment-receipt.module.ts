@@ -14,5 +14,6 @@ import { SaleEntity } from '../sale/entities/sale.entity';
   ],
   controllers: [SalePaymentReceiptController],
   providers: [SalePaymentReceiptService],
+  exports: [SalePaymentReceiptService],
 })
 export class SalePaymentReceiptModule {}

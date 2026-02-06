@@ -13,6 +13,7 @@ import { ModuleStatus } from '@/common/enums/status.enum';
 import { handleTransactionCodeGeneration } from '@/utils/transaction-code-generation.util';
 import { StockService } from '../../stocking/stock/stock.service';
 import { StockIncrementRequestDto } from '../../stocking/stock/dto/stock-increment-request.dto';
+import { SalePaymentReceiptService } from '../sale-payment-receipt/sale-payment-receipt.service';
 
 @Injectable()
 export class SaleService extends BasePaginationCrudService<SaleEntity, SaleResponseDto>{
@@ -27,6 +28,7 @@ export class SaleService extends BasePaginationCrudService<SaleEntity, SaleRespo
     @InjectRepository(SaleItemEntity)
     private saleItemRepository: Repository<SaleItemEntity>,
     private stockService: StockService,
+    private salePaymentReceiptService: SalePaymentReceiptService,
     private dataSource: DataSource,
   ){
     super();
@@ -49,8 +51,15 @@ export class SaleService extends BasePaginationCrudService<SaleEntity, SaleRespo
 
     try {
       const code = await this.nextCode();
-      let entity = SaleMapper.toCreateEntity({ ...dto, code });
+      let entity = SaleMapper.toCreateEntity({ 
+        ...dto, 
+        code, 
+      });
+      console.log('DADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD', entity.totalPaidAmount);
       entity = await this.saleRepository.save(entity);
+      
+      console.log('AFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF', entity.totalPaidAmount);
+      // return SaleMapper.toDto(entity);
       
       const incrementDto: StockIncrementRequestDto = {
         branchIds: entity.items.map(_e => entity.branchId),
@@ -59,6 +68,21 @@ export class SaleService extends BasePaginationCrudService<SaleEntity, SaleRespo
       };
 
       await this.stockService.stockIncrement(incrementDto, 'stockOut');
+
+      if (dto.isPayNow) {
+        const receiptNumber = await this.salePaymentReceiptService.nextCode();
+        await this.salePaymentReceiptService.create({
+          code: receiptNumber,
+          saleId: entity.id,
+          receiptById: entity.createdById,
+          receiptDate: new Date(),
+          amount: entity.totalPaidAmount,
+          createdById: entity.createdById,
+          note: '',
+          attachments: [],
+        });
+      }
+
       await queryRunner.commitTransaction();
 
       return SaleMapper.toDto(entity);
@@ -112,8 +136,11 @@ export class SaleService extends BasePaginationCrudService<SaleEntity, SaleRespo
         relations: {
           branch: true,
           customer: true,
+          soleBy: true,
           items: {
-            product: true,
+            product: {
+              uom: true,
+            },
           },
           salePaymentReceipts: {
             receiptBy: true,

@@ -55,6 +55,10 @@ export class CreateSaleRequestDto {
     @IsNotEmpty()
     status: string;
 
+    @ApiProperty()
+    @IsNotEmpty()
+    isPayNow: boolean;
+
     createdById: number;
 
     @ApiProperty({ type: [CreateSaleItemRequestDto] })

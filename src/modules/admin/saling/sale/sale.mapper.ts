@@ -1,3 +1,4 @@
+import { ModuleStatus } from "@/common/enums/status.enum";
 import { BranchMapper } from "../../master-data/branch/branch.mapper";
 import { CustomerMapper } from "../../master-data/customer/customer.mapper";
 import { UserMapper } from "../../system/user/user.mapper";
@@ -75,10 +76,12 @@ export class SaleMapper {
         entity.totalQuantity = dto.totalQuantity;
         entity.totalDiscount = dto.totalDiscount;
         entity.totalAmount = dto.totalAmount;
-        entity.totalPaidAmount = dto.totalPaidAmount;
+         entity.totalPaidAmount = dto.isPayNow
+            ? entity.totalAmount - entity.totalDiscount
+            : 0;
         entity.attachments = dto.attachments ? [...dto.attachments] : [];
         entity.description = dto.description;
-        entity.status = dto.status;
+        entity.status = dto.isPayNow ? ModuleStatus.PAID : ModuleStatus.PENDING;
         entity.createdById = dto.createdById;
 
         if (dto.items && dto.items.length > 0) {

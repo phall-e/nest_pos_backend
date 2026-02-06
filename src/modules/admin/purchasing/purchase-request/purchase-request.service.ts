@@ -95,8 +95,12 @@ export class PurchaseRequestService extends BasePaginationCrudService<PurchaseRe
         where: { id },
         relations: {
           branch: true,
+          approvedBy: true,
+          createdBy: true,
           items: {
-            product: true,
+            product: {
+              uom: true,
+            },
           }
         }
       });

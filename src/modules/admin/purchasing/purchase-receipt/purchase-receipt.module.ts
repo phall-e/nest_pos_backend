@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PurchaseReceiptEntity } from './entities/purchase-receipt.entity';
 import { PurchaseReceiptItemEntity } from './entities/purchase-receipt-item.entity';
 import { PurchaseOrderEntity } from '../purchase-order/entities/purchase-order.entity';
+import { PurchaseReceiptBillingModule } from '../purchase-receipt-billing/purchase-receipt-billing.module';
 
 @Module({
   imports: [
@@ -12,7 +13,8 @@ import { PurchaseOrderEntity } from '../purchase-order/entities/purchase-order.e
       PurchaseReceiptEntity,
       PurchaseReceiptItemEntity,
       PurchaseOrderEntity,
-    ])
+    ]),
+    PurchaseReceiptBillingModule,
   ],
   controllers: [PurchaseReceiptController],
   providers: [PurchaseReceiptService],

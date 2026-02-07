@@ -69,6 +69,10 @@ export class CreatePurchaseReceiptRequestDto {
     @IsNumber()
     totalDiscount: number;
 
+    @ApiProperty()
+    @IsNotEmpty()
+    isPayNow: boolean;
+
     createdById: number;
 
     @ApiProperty({ type: [CreatePurchaseReceiptItemRequestDto] })

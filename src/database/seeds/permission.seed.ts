@@ -360,4 +360,21 @@ export const permissions = [
         name: 'delete-sale-payment-receipt',
         description: 'Delete sale payment receipt',
     },
+     // Purchase receipt billing
+    {
+        name: 'read-purchase-receipt-billing',
+        description: 'Read purchase receipt billing',
+    },
+    {
+        name: 'create-purchase-receipt-billing',
+        description: 'Create purchase receipt billing',
+    },
+    {
+        name: 'update-purchase-receipt-billing',
+        description: 'Update purchase receipt billing',
+    },
+    {
+        name: 'delete-purchase-receipt-billing',
+        description: 'Delete purchase receipt billing',
+    },
 ]

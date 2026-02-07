@@ -5,6 +5,7 @@ import { SupplierResponseDto } from "@/modules/admin/master-data/supplier/dto/su
 import { PurchaseReceiptAttachment } from "./attachement.dto";
 import { UserResponseDto } from "@/modules/admin/system/user/dto/user-response.dto";
 import { PurchaseReceiptItemResponseDto } from "./purchase-receipt-item-response.dto";
+import { PurchaseReceiptBillingResponseDto } from "../../purchase-receipt-billing/dto/purchase-receipt-billing-response.dto";
 
 export class PurchaseReceiptResponseDto {
     @ApiProperty()
@@ -62,6 +63,9 @@ export class PurchaseReceiptResponseDto {
     status: string;
 
     @ApiProperty()
+    isInStock: boolean;
+
+    @ApiProperty()
     totalQuantity: number;
 
     @ApiProperty()
@@ -69,6 +73,9 @@ export class PurchaseReceiptResponseDto {
 
     @ApiProperty()
     totalNetAmount: number;
+
+    @ApiProperty()
+    totalPaidAmount: number;
 
     @ApiProperty()
     totalDiscount: number;
@@ -84,4 +91,7 @@ export class PurchaseReceiptResponseDto {
 
     @ApiProperty()
     items: PurchaseReceiptItemResponseDto[];
+
+    @ApiProperty()
+    purchaseReceiptBillings: PurchaseReceiptBillingResponseDto[];
 }

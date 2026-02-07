@@ -57,7 +57,7 @@ export class StockInService extends BasePaginationCrudService<StockInEntity, Sto
       }
       await this.purchaseReceiptRepository.update(
         { id: dto.purchaseReceiptId },
-        { status: ModuleStatus.COMPLETED },
+        { isInStock: true },
       )
       await this.stockService.stockIncrement(incrementDto, 'stockIn');
       await queryRunner.commitTransaction();

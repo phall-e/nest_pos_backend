@@ -7,6 +7,7 @@ import { ModuleStatus } from "@/common/enums/status.enum";
 import { BaseEntity } from "@/database/entities/base.entity";
 import { PurchaseReceiptItemEntity } from "./purchase-receipt-item.entity";
 import { PurchaseReceiptAttachment } from "../dto/attachement.dto";
+import { PurchaseReceiptBillingEntity } from "../../purchase-receipt-billing/entities/purchase-receipt-billing.entity";
 
 @Entity({
     schema: 'admin',
@@ -140,6 +141,14 @@ export class PurchaseReceiptEntity extends BaseEntity{
     status: string;
 
     @Column({
+        name: 'is_in_stock',
+        type: 'boolean',
+        default: false,
+        nullable: false,
+    })
+    isInStock: boolean;
+
+    @Column({
         name: 'total_quantity',
         type: 'decimal',
         precision: 14,
@@ -170,6 +179,16 @@ export class PurchaseReceiptEntity extends BaseEntity{
     totalNetAmount: number;
 
     @Column({
+        name: 'total_paid_amount',
+        type: 'decimal',
+        precision: 14,
+        scale: 5,
+        default: 0,
+        nullable: false,
+    })
+    totalPaidAmount: number;
+
+    @Column({
         name: 'total_discount',
         type: 'decimal',
         precision: 14,
@@ -181,6 +200,9 @@ export class PurchaseReceiptEntity extends BaseEntity{
 
     @OneToMany(() => PurchaseReceiptItemEntity, (item) => item.purchaseReceipt, { cascade: true })
     items: PurchaseReceiptItemEntity[];
+
+    @OneToMany(() => PurchaseReceiptBillingEntity, (item) => item.purchaseReceipt, { cascade: true })
+    purchaseReceiptBillings: PurchaseReceiptBillingEntity[];
 
     constructor(partial?: Partial<PurchaseReceiptEntity>){
         super();

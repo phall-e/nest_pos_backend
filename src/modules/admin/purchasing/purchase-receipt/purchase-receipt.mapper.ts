@@ -2,6 +2,7 @@ import { BranchMapper } from "../../master-data/branch/branch.mapper";
 import { SupplierMapper } from "../../master-data/supplier/supplier.mapper";
 import { UserMapper } from "../../system/user/user.mapper";
 import { PurchaseOrderMapper } from "../purchase-order/purchase-order.mapper";
+import { PurchaseReceiptBillingMapper } from "../purchase-receipt-billing/purchase-receipt-billing.mapper";
 import { CreatePurchaseReceiptRequestDto } from "./dto/create-purchase-receipt-resquest.dto";
 import { PurchaseReceiptResponseDto } from "./dto/purchase-receipt-response.dto";
 import { UpdatePurchaseReceiptRequestDto } from "./dto/update-purchase-receipt-request.dto";
@@ -25,9 +26,11 @@ export class PurchaseReceiptMapper {
         dto.createdById = entity.createdById;
         dto.approvedById = entity.approveedById;
         dto.status = entity.status;
+        dto.isInStock = entity.isInStock;
         dto.totalQuantity = entity.totalQuantity ? parseFloat(entity.totalQuantity as any) : null;
         dto.totalAmount = entity.totalAmount ? parseFloat(entity.totalAmount as any) : null;
         dto.totalNetAmount = entity.totalNetAmount ? parseFloat(entity.totalNetAmount as any) : null;
+        dto.totalPaidAmount = entity.totalPaidAmount ? parseFloat(entity.totalPaidAmount as any) : null;
         dto.totalDiscount = entity.totalDiscount ? parseFloat(entity.totalDiscount as any) : null;
         dto.createdAt = entity.createdAt;
         dto.updatedAt = entity.updatedAt;
@@ -56,6 +59,12 @@ export class PurchaseReceiptMapper {
         if (entity.items && entity.items.length > 0) {
             dto.items = await Promise.all(
                 entity.items.map((item) => PurchaseReceiptItemMapper.toDto(item))
+            );
+        }
+
+        if (entity.purchaseReceiptBillings && entity.purchaseReceiptBillings.length > 0) {
+            dto.purchaseReceiptBillings = await Promise.all(
+                entity.purchaseReceiptBillings.map((item) => PurchaseReceiptBillingMapper.toDto(item))
             );
         }
 

@@ -84,7 +84,13 @@ export class PurchaseReceiptMigration1764984877761 implements MigrationInterface
                         length: '30',
                         default: `'${ModuleStatus.PENDING}'`,
                         isNullable: false,
-                    },   
+                    },  
+                    {
+                        name: 'is_in_stock',
+                        type: 'boolean',
+                        default: false,
+                        isNullable: false,
+                    }, 
                     {
                         name: 'total_quantity',
                         type: 'decimal',
@@ -103,6 +109,14 @@ export class PurchaseReceiptMigration1764984877761 implements MigrationInterface
                     },
                     {
                         name: 'total_net_amount',
+                        type: 'decimal',
+                        precision: 14,
+                        scale: 5,
+                        default: 0,
+                        isNullable: false,
+                    },
+                    {
+                        name: 'total_paid_amount',
                         type: 'decimal',
                         precision: 14,
                         scale: 5,

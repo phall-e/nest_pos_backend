@@ -13,6 +13,7 @@ import { handleError } from '@/utils/handle-error.util';
 import { ModuleStatus } from '@/common/enums/status.enum';
 import { handleTransactionCodeGeneration } from '@/utils/transaction-code-generation.util';
 import { CancelPurchaseReceiptRequestDto } from './dto/cancel-purchase-receipt-request.dto';
+import { PurchaseReceiptBillingService } from '../purchase-receipt-billing/purchase-receipt-billing.service';
 
 @Injectable()
 export class PurchaseReceiptService extends BasePaginationCrudService<PurchaseReceiptEntity, PurchaseReceiptResponseDto>{
@@ -28,6 +29,7 @@ export class PurchaseReceiptService extends BasePaginationCrudService<PurchaseRe
     private purchaseReceiptItemRepository: Repository<PurchaseReceiptItemEntity>,
     @InjectRepository(PurchaseOrderEntity)
     private purchaseOrderRepository: Repository<PurchaseOrderEntity>,
+    private purchaseReceiptBillingService: PurchaseReceiptBillingService,
   ){
     super();
   }
@@ -44,6 +46,20 @@ export class PurchaseReceiptService extends BasePaginationCrudService<PurchaseRe
     try {
       let entity = PurchaseReceiptMapper.toCreateEntity(dto);
       entity = await this.purchaseReceiptRepository.save(entity);
+
+      if (dto.isPayNow) {
+        const billingNumber = await this.purchaseReceiptBillingService.nextCode();
+        await this.purchaseReceiptBillingService.create({
+          code: billingNumber,
+          purchaseReceiptId: entity.id,
+          billingById: entity.createdById,
+          billingDate: new Date(),
+          amount: Number(dto.totalNetAmount),
+          createdById: entity.createdById,
+          note: '',
+          attachments: [],
+        });
+      }
       if (entity.purchaseOrderId) {
         await this.purchaseOrderRepository.update(
           { id: entity.id },
@@ -113,8 +129,10 @@ export class PurchaseReceiptService extends BasePaginationCrudService<PurchaseRe
               category: true,
               uom: true,
             },
-            
-          }
+          },
+          purchaseReceiptBillings: {
+            billingBy: true,
+          },
         }
       });
       if (!entity) throw new NotFoundException();

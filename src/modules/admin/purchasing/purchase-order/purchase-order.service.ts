@@ -109,8 +109,12 @@ export class PurchaseOrderService extends BasePaginationCrudService<PurchaseOrde
           purchaseRequest: true,
           branch: true,
           supplier: true,
+          approvedBy: true,
+          createdBy: true,
           items: {
-            product: true,
+            product: {
+              uom: true,
+            },
           },
         },
       });

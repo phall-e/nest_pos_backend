@@ -106,7 +106,9 @@ export class PurchaseOrderService extends BasePaginationCrudService<PurchaseOrde
       const entity = await this.purchaseOrderRepository.findOne({
         where: { id },
         relations: {
-          purchaseRequest: true,
+          purchaseRequest: {
+            createdBy: true,
+          },
           branch: true,
           supplier: true,
           approvedBy: true,

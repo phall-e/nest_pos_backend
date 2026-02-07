@@ -10,7 +10,7 @@ export const handleTransactionCodeGeneration = async <T extends ObjectLiteral>(
         const count = await repository.count();
         const nextNumber = count + 1;
         const date = new Date();
-        const currentYear = isDate ? date.getFullYear() : '';
+        const currentYear = isDate ? String(date.getFullYear()).slice(-2) : '';
         const code =  `${prefix}${currentYear}${String(nextNumber).padStart(digits, '0')}`;
         return code;
     } catch (error) {

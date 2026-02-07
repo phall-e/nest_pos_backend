@@ -55,12 +55,7 @@ export class SaleService extends BasePaginationCrudService<SaleEntity, SaleRespo
         ...dto, 
         code, 
       });
-      console.log('DADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD', entity.totalPaidAmount);
       entity = await this.saleRepository.save(entity);
-      
-      console.log('AFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF', entity.totalPaidAmount);
-      // return SaleMapper.toDto(entity);
-      
       const incrementDto: StockIncrementRequestDto = {
         branchIds: entity.items.map(_e => entity.branchId),
         productIds: entity.items.map(e => e.productId),
@@ -76,7 +71,7 @@ export class SaleService extends BasePaginationCrudService<SaleEntity, SaleRespo
           saleId: entity.id,
           receiptById: entity.createdById,
           receiptDate: new Date(),
-          amount: entity.totalPaidAmount,
+          amount: Number(dto.totalAmount) - Number(dto.totalDiscount),
           createdById: entity.createdById,
           note: '',
           attachments: [],

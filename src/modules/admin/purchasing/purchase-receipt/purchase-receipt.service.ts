@@ -3,7 +3,7 @@ import { CreatePurchaseReceiptRequestDto } from './dto/create-purchase-receipt-r
 import { UpdatePurchaseReceiptRequestDto } from './dto/update-purchase-receipt-request.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PurchaseReceiptEntity } from './entities/purchase-receipt.entity';
-import { Repository } from 'typeorm';
+import { In, Not, Repository } from 'typeorm';
 import { PurchaseReceiptItemEntity } from './entities/purchase-receipt-item.entity';
 import { PurchaseOrderEntity } from '../purchase-order/entities/purchase-order.entity';
 import { BasePaginationCrudService } from '@/common/services/base-pagination-crud.service';
@@ -83,9 +83,40 @@ export class PurchaseReceiptService extends BasePaginationCrudService<PurchaseRe
     }
   }
 
-  public async findAllForSelection(
+  public async findAllForBillingSelection(
     branchId: number,
-    isApproved: boolean,
+    isPaid: boolean,
+  ): Promise<{id: number; code: string; createdById: number }[]> {
+    try {
+      const where: any = {
+        branchId,
+      }
+
+      // ✅ Apply condition only when is paid = false
+      if (isPaid == false) {
+        where.status = Not(In([ModuleStatus.PAID, ModuleStatus.CANCELED]));
+      }
+
+      const entities = await this.purchaseReceiptRepository.find({
+        where,
+        select: {
+          id: true,
+          code: true,
+          createdById: true,
+        },
+        order: {
+          id: 'DESC',
+        },
+      })
+      return entities;
+    } catch (error) {
+      handleError(error);
+    }
+  }
+
+  public async findAllForStockSelection(
+    branchId: number,
+    isStock: boolean,
   ): Promise<{id: number; code: string; createdById: number }[]> {
     try {
       const where: any = {
@@ -93,8 +124,9 @@ export class PurchaseReceiptService extends BasePaginationCrudService<PurchaseRe
       }
 
       // ✅ Apply condition only when isApproved = true
-      if (isApproved) {
-        where.status = ModuleStatus.APPROVED
+      if (isStock) {
+        where.isInStock = false;
+        where.status = Not(ModuleStatus.CANCELED);
       }
 
       const entities = await this.purchaseReceiptRepository.find({
@@ -119,7 +151,9 @@ export class PurchaseReceiptService extends BasePaginationCrudService<PurchaseRe
       const entity = await this.purchaseReceiptRepository.findOne({
         where: { id },
         relations: {
-          purchaseOrder: true,
+          purchaseOrder: {
+            createdBy: true,
+          },
           branch: true,
           supplier: true,
           approvedBy: true,

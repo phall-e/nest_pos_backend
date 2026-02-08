@@ -65,13 +65,22 @@ export class PurchaseReceiptController {
     return this.purchaseReceiptService.nextCode();
   }
 
-  @Get('select-options/:branchId/:isApproved')
-  @ApiResponse({ status: 200, type: Object, description: 'Find all for selection' })
-  public findAllForSelection(
+  @Get('select-options/billing/:branchId/:isPaid')
+  @ApiResponse({ status: 200, type: Object, description: 'Find all for billing selection' })
+  public findAllForPaidSelection(
     @Param('branchId', ParseIntPipe) branchId: number,
-    @Param('isApproved') isApproved: boolean
+    @Param('isPaid') isPaid: boolean
   ): Promise<{ id: number; code: string; createdById: number}[]> {
-    return this.purchaseReceiptService.findAllForSelection(branchId, isApproved);
+    return this.purchaseReceiptService.findAllForBillingSelection(branchId, isPaid);
+  }
+
+  @Get('select-options/stock/:branchId/:isStock')
+  @ApiResponse({ status: 200, type: Object, description: 'Find all for stock selection' })
+  public findAllForStockSelection(
+    @Param('branchId', ParseIntPipe) branchId: number,
+    @Param('isStock') isStock: boolean
+  ): Promise<{ id: number; code: string; createdById: number}[]> {
+    return this.purchaseReceiptService.findAllForStockSelection(branchId, isStock);
   }
 
   @Get(':id')

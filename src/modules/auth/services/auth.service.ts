@@ -34,7 +34,7 @@ export class AuthService {
             );
             const uniquePermissions = Array.from(new Set(allPermissions.flat()));
             const users = await UserMapper.toDto(user);
-            const token = await this.tokenService.generateAuthToken({...users, permissions: uniquePermissions });
+            const token = await this.tokenService.generateAuthToken({...users});
             return {
                 token,
                 users: users,

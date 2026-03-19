@@ -23,20 +23,10 @@ export class JwtStrategy extends PassportStrategy(Strategy){
     async validate(payload: UserResponseDto): Promise<UserResponseDto> {
         
         const user = await this.userService.findOneByUsername(payload.username);
+        const userMapper = UserMapper.toDtoWithRelationship(user);
 
         if (!user) throw new UnauthorizedException('Invalid credentials');
         if (!user.isActive) throw new UnauthorizedException('User is inactive');
-        return {
-            id: payload.id,
-            username: payload.username,
-            isAdmin: payload.isAdmin,
-            isActive: payload.isActive,
-            permissions: payload.permissions,
-            createdAt: payload.createdAt,
-            updatedAt: payload.updatedAt,
-            deletedAt: payload.deletedAt,
-            roles: payload.roles,
-            branches: payload.branches,
-        };
+        return userMapper;
     }
 }

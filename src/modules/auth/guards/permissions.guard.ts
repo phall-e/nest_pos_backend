@@ -24,6 +24,7 @@ export class PermissionGuard implements CanActivate {
         }
 
         const permission = user.permissions;
+        console.log('User PermISSION', permission);
         if (!permission) {
             throw new ForbiddenException('Invalid permissions');
         }
@@ -37,6 +38,6 @@ export class PermissionGuard implements CanActivate {
     }
 
     async matchPermissions(userPermissions: string[], requiredPermissioins: string[]): Promise<boolean> {
-        return requiredPermissioins.every(permission => userPermissions.includes(permission));
+        return requiredPermissioins.some(permission => userPermissions.includes(permission));
     }
 }

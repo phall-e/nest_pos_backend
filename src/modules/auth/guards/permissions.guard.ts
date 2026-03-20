@@ -1,5 +1,3 @@
-import { UserEntity } from "@/modules/admin/system/user/entities/user.entity";
-import { UserMapper } from "@/modules/admin/system/user/user.mapper";
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 
@@ -22,9 +20,8 @@ export class PermissionGuard implements CanActivate {
         if (user.isAdmin) {
             return true;
         }
-
-        const permission = user.permissions;
-        console.log('User PermISSION', permission);
+        let permission = user.roles.flatMap(role => role.permissions);
+        permission = permission.map(item => item.name);
         if (!permission) {
             throw new ForbiddenException('Invalid permissions');
         }

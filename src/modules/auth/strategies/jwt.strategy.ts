@@ -3,7 +3,6 @@ import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
-import { JwtPayloadDto } from "../dto/jwt-payload.dto";
 import { UserResponseDto } from "@/modules/admin/system/user/dto/user-response.dto";
 import { UserMapper } from "@/modules/admin/system/user/user.mapper";
 

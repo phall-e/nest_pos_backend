@@ -77,13 +77,21 @@ export class DashboardService {
 
         // const totalAmountPayToSupplier = amountPayToSupplierEntity.reduce((total, item) => total + item.totalNetAmount, 0);
 
-        // const 
+        const totalBranch = await this.branchRepository.count();
+        const totalUser = await this.userRepository.count();
+        const totalSupplier = await this.supllierRepository.count();
+        let totalCustomer = await this.customerRepository.count();
+        totalCustomer = totalCustomer - 1;
 
         return {
             saleGrandTotalAmount,
             totalExpense,
             totalAmountPayToSupplier,
-            pendingCustomerPaymentEntity
+            pendingCustomerPaymentEntity,
+            totalBranch,
+            totalUser,
+            totalSupplier,
+            totalCustomer,
         }
     }
 }

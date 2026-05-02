@@ -223,4 +223,32 @@ export class SaleService extends BasePaginationCrudService<SaleEntity, SaleRespo
       handleError(error);
     }
   }
+
+  public async summaryByYear(year: Date) {
+    try {
+      const yearValue = year.getFullYear(); // ✅ extract year
+
+      const result = await this.saleRepository
+        .createQueryBuilder('sale')
+        .select('EXTRACT(MONTH FROM sale.saleDate)', 'month')
+        .addSelect('SUM(sale.totalAmount)', 'total')
+        .where('EXTRACT(YEAR FROM sale.saleDate) = :year', { year: yearValue })
+        .groupBy('month')
+        .orderBy('month', 'ASC')
+        .getRawMany();
+
+      const monthlyData = Array(12).fill(0);
+
+      result.forEach((item) => {
+        const monthIndex = parseInt(item.month, 10) - 1;
+        monthlyData[monthIndex] = parseFloat(item.total);
+      });
+
+      return {
+        data: monthlyData,
+      };
+    } catch (error) {
+      handleError(error);
+    }
+  }
 }

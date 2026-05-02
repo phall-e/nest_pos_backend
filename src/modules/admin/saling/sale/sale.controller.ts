@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, Put, ParseBoolPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, Put, ParseBoolPipe, Query, ParseDatePipe } from '@nestjs/common';
 import { SaleService } from './sale.service';
 import { CreateSaleRequestDto } from './dto/create-sale-request.dto';
 import { UpdateSaleRequestDto } from './dto/update-sale-request.dto';
@@ -47,6 +47,13 @@ export class SaleController {
   @ApiResponse({ status: 200, type: String, example: 'SL2026000001', description: 'Get next code for sale' })
   public nextCode(): Promise<string> {
     return this.saleService.nextCode();
+  }
+
+  @Get('summary-by-year')
+  @ApiResponse({ status: 200, type: String, description: 'Summary saling data by year' })
+  public summaryByYear(@Query('year') year: string) {
+    const date = new Date(`${year}-01-01`);
+    return this.saleService.summaryByYear(date);
   }
 
   @Get('select-options/:branchId/:isAll')
